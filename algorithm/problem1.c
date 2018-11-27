@@ -8,9 +8,9 @@ void reverse(void *array, int start, int end, size_t size)
     while (start < end)
     {
         // the array is the pointer of void, not the real type, so add the size.
-        memcpy(tmp, array + start * size, size);
-        memcpy(array + start * size, array + end * size, size);
-        memcpy(array + end * size, tmp, size);
+        memcpy(tmp,                         (char*)array + start * size, size);
+        memcpy((char*)array + start * size, (char*)array +   end * size, size);
+        memcpy((char*)array +   end * size, tmp,                         size);
         start++; end--;
     }
     free(tmp);
