@@ -31,10 +31,12 @@ int main(int argc, char const *argv[])
     for (i = 0; i < n; i++)
         *(array + i) = i;
 
+    printf("origin: ");
     for (i = 0; i < n; i++)
         printf("%lld ", *(array + i));
     printf("\n");
 
+    printf("shifted: ");
     loop_right_shift(array, n, k, sizeof(long long));
     for (i = 0; i < n; i++)
         printf("%lld ", *(array + i));
