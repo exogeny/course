@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-project(homework1)
-
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+project(cg)
 
 # Compiler Flags
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -26,6 +22,8 @@ else()
   set(CMAKE_CXX_STANDARD 11)
 endif()
 
+set(cg_root_folder ${cg_SOURCE_DIR})
+
 # External dependencies
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/external)
 
@@ -36,24 +34,29 @@ mark_as_advanced(DOWNLOAD_LOCATION)
 
 # Include the external dependencies
 include(glew)
+include(glext)
 include(freeglut)
 include(freeimage)
 
 include_directories(${glew_INCLUDE_DIRS})
 include_directories(${freeglut_INCLUDE_DIRS})
 include_directories(${freeimage_INCLUDE_DIRS})
+include_directories(include)
 
-FILE(GLOB SOURCES "*.cc")
-ADD_EXECUTABLE(homework1 ${SOURCES})
+set(cg_EXTERNAL_LIBRARIES
+    ${glew_STATIC_LIBRARIES}
+    ${freeglut_STATIC_LIBRARIES}
+    ${freeimage_STATIC_LIBRARIES})
 
-TARGET_LINK_LIBRARIES(homework1 ${glew_STATIC_LIBRARIES})
-TARGET_LINK_LIBRARIES(homework1 ${freeglut_STATIC_LIBRARIES})
-TARGET_LINK_LIBRARIES(homework1 ${freeimage_STATIC_LIBRARIES})
+set(cg_EXTERNAL_DEPENDENCIES
+    glew
+    freeglut
+    freeimage)
 
-set(RAW_DATA_IMAGE                    "DATA/Crate.bmp")
+include(homework1/homework1.cmake)
+include(homework3/homework3.cmake)
+include(homework4/homework4.cmake)
 
-INSTALL(TARGETS homework1             DESTINATION ${CMAKE_BINARY_DIR}/bin)
-INSTALL(FILES ${glew_LIBRARIES}       DESTINATION ${CMAKE_BINARY_DIR}/bin)
-INSTALL(FILES ${freeglut_LIBRARIES}   DESTINATION ${CMAKE_BINARY_DIR}/bin)
-INSTALL(FILES ${freeimage_LIBRARIES}  DESTINATION ${CMAKE_BINARY_DIR}/bin)
-INSTALL(FILES ${RAW_DATA_IMAGE}       DESTINATION ${CMAKE_BINARY_DIR}/bin/DATA)
+install(FILES ${glew_LIBRARIES}       DESTINATION ${CMAKE_BINARY_DIR}/bin)
+install(FILES ${freeglut_LIBRARIES}   DESTINATION ${CMAKE_BINARY_DIR}/bin)
+install(FILES ${freeimage_LIBRARIES}  DESTINATION ${CMAKE_BINARY_DIR}/bin)
