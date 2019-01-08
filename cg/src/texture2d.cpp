@@ -24,6 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "glinc.h"
 #include "FreeImage.h"
 
+#ifndef WIN32
+#include <memory.h>
+#endif
+
 int const MAX_TEXTURES = 3;
 
 float const SPEED_STEP = 0.05f;

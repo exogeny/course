@@ -5,6 +5,22 @@ endif(COMMAND CMAKE_POLICY)
 
 project(cg_examples)
 
+set(BUILD_ARCH "32")
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+  set(BUILD_ARCH "64")
+endif()
+
+# gnu gcc compile flag
+if(CMAKE_COMPILER_IS_GNUCXX)
+  if(DEBUG)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0 -fPIC -Wall")
+  else(DEBUG)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O3 -fPIC -Wall")
+  endif(DEBUG)
+  SET(CMAKE_C_LINK_EXECUTABLE   "${CMAKE_C_LINK_EXECUTABLE} -lstdc++ -lX11 -lXxf86vm -lXi")
+  SET(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -lstdc++ -lX11 -lXxf86vm -lXi")
+endif(CMAKE_COMPILER_IS_GNUCXX)
+
 set(CMAKE_MODULE_PATH ${cg_examples_SOURCE_DIR}/cmake ${PROJECT_SOURCE_DIR}/external)
 set(CMAKE_INSTALL_PREFIX "${cg_examples_BINARY_DIR}/dist" CACHE PATH "cg_examples install prefix" FORCE)
 

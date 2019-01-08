@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef WIN32
 #include <windows.h>
 #else
-#include <sys/time.h>
+#include <time.h>
 #endif
 
 class CPUCounter

@@ -21,7 +21,8 @@ if(WIN32)
   endif()
   set(freeglut_LIBRARIES ${freeglut_INSTALL}/bin/freeglut$<$<CONFIG:Debug>:d>.dll)
 else()
-  set(freeglut_STATIC_LIBRARIES ${freeglut_INSTALL}/lib/libfreeglut.a)
+  set(freeglut_STATIC_LIBRARIES ${freeglut_INSTALL}/lib${BUILD_ARCH}/libglut.a)
+  set(freeglut_LIBRARIES ${freeglut_INSTALL}/lib${BUILD_ARCH}/libglut.so)
 endif()
 
 ExternalProject_Add(freeglut
@@ -32,4 +33,5 @@ ExternalProject_Add(freeglut
   BUILD_BYPRODUCTS  ${freeglut_STATIC_LIBRARIES}
   INSTALL_DIR       ${freeglut_INSTALL}
   CMAKE_CACHE_ARGS  -DCMAKE_INSTALL_PREFIX:STRING=${freeglut_INSTALL}
+                    -DCMAKE_BUILD_TYPE:STRING=Release
                     -DINSTALL_PDB:BOOL=OFF)

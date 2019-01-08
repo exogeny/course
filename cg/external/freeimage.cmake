@@ -7,11 +7,7 @@ set(freeimage_BUILD        ${CMAKE_CURRENT_BINARY_DIR}/freeimage)
 
 if(MSVC)
   # set build type
-  if(DEBUG)
-    set(Configuration Debug)
-  else()
-    set(Configuration Release)
-  endif()
+  set(Configuration Release)
 
   # set window sdk version
   if(CMAKE_VERSION VERSION_LESS "3.4")
@@ -30,9 +26,9 @@ if(MSVC)
   # set tool sets
   set(TOOLSETVERSION  ${CMAKE_VS_PLATFORM_TOOLSET})
   if(MSVC_VERSION LESS 1900)
-    set(SLNNAME	        ${freeimage_DIR}/FreeImage.2013.sln)
+    set(SLNNAME         ${freeimage_DIR}/FreeImage.2013.sln)
   else()
-    set(SLNNAME	        ${freeimage_DIR}/FreeImage.2017.sln)
+    set(SLNNAME         ${freeimage_DIR}/FreeImage.2017.sln)
   endif()
   set(BUILD_FREEIMAGE msbuild ${SLNNAME}  /p:Platform=${Platform}
                                           /p:Configuration=${Configuration}
@@ -53,6 +49,10 @@ if(WIN32)
     set(freeimage_LIBRARIES         ${freeimage_DIST_DIR}/x32/FreeImage.dll)
     set(freeimage_STATIC_LIBRARIES  ${freeimage_DIST_DIR}/x32/FreeImage.lib)
   endif()
+else()
+  set(freeimage_INCLUDE_DIR       ${freeimage_DIST_DIR})
+  set(freeimage_LIBRARIES         ${freeimage_DIST_DIR}/libfreeimage-3.18.0.so)
+  set(freeimage_STATIC_LIBRARIES  ${freeimage_DIST_DIR}/libfreeimage.a)
 endif()
 
 ExternalProject_Add(freeimage
@@ -63,5 +63,4 @@ ExternalProject_Add(freeimage
   CONFIGURE_COMMAND   ""
   BUILD_IN_SOURCE     1
   BUILD_COMMAND       ${BUILD_FREEIMAGE}
-  BUILD_BYPRODUCTS    ${freeimage_STATIC_LIBRARIES}
   INSTALL_COMMAND     "")
