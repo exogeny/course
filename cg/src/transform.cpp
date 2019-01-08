@@ -76,83 +76,83 @@ void draw_string(int x, int y, char const *str)
 
 void look_at(float eyex, float eyey, float eyez, float atx, float aty, float atz, float upx, float upy, float upz)
 {
-	//-z axis
-	Vectorf minusz(atx - eyex, aty - eyey, atz - eyez);
-	Vectorf x;  //x axis
-	Vectorf y(upx, upy, upz);    //(y axis)    
+    //-z axis
+    Vectorf minusz(atx - eyex, aty - eyey, atz - eyez);
+    Vectorf x;  //x axis
+    Vectorf y(upx, upy, upz);    //(y axis)    
 
-	/* Viewing matrix
-	   x0		x1			x2			-eye Dot x
-	   y0		y1			y2			-eye Dot y
-	   z0		z1			z2			-eye Dot z
-	   0		0			0			1
-	*/
+    /* Viewing matrix
+       x0       x1          x2          -eye Dot x
+       y0       y1          y2          -eye Dot y
+       z0       z1          z2          -eye Dot z
+       0        0           0           1
+    */
 
-	/* Inverse of viewing matrix
-	   x0		y0			z0			eyex
-	   x1		y1			z1			eyey
-	   x2		y2			z2			eyez
-	   0		0			0			1
-	*/
+    /* Inverse of viewing matrix
+       x0       y0          z0          eyex
+       x1       y1          z1          eyey
+       x2       y2          z2          eyez
+       0        0           0           1
+    */
 
     minusz.Normalize();
 
     // x = -z cross y
     x = minusz % y;
-	x.Normalize();
-	
+    x.Normalize();
+    
     // Recompute y: y = x cross -z
     y = x % minusz;
 
-	Matrixf view;
+    Matrixf view;
 
-    view.IdentityMatrix();	
-	view.ele[0] = x.ele[0];
-	view.ele[1] = y.ele[0];
-	view.ele[2] = -minusz.ele[0];
-	view.ele[4] = x.ele[1];
-	view.ele[5] = y.ele[1];
-	view.ele[6] = -minusz.ele[1];
-	view.ele[8] = x.ele[2];
-	view.ele[9] = y.ele[2];
-	view.ele[10] = -minusz.ele[2];    
+    view.IdentityMatrix();  
+    view.ele[0] = x.ele[0];
+    view.ele[1] = y.ele[0];
+    view.ele[2] = -minusz.ele[0];
+    view.ele[4] = x.ele[1];
+    view.ele[5] = y.ele[1];
+    view.ele[6] = -minusz.ele[1];
+    view.ele[8] = x.ele[2];
+    view.ele[9] = y.ele[2];
+    view.ele[10] = -minusz.ele[2];    
     view.Translate(-eyex, -eyey, -eyez);
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glMultMatrixf(view);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glMultMatrixf(view);
 }
 
 void init()
 {
-	g_rotm.IdentityMatrix();
+    g_rotm.IdentityMatrix();
     g_world_rotm.IdentityMatrix();
 
-	glShadeModel(GL_SMOOTH);
-	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,GL_FALSE);
+    glShadeModel(GL_SMOOTH);
+    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,GL_FALSE);
 
-	GLfloat pos[] = { 1.5f, 1.0f, 100.0f, 1.0f };
-	GLfloat dif[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    GLfloat pos[] = { 1.5f, 1.0f, 100.0f, 1.0f };
+    GLfloat dif[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-//	glLightfv(GL_LIGHT0, GL_DIFFUSE, dif);
-//	glLightfv(GL_LIGHT0, GL_SPECULAR, dif);
+//  glLightfv(GL_LIGHT0, GL_DIFFUSE, dif);
+//  glLightfv(GL_LIGHT0, GL_SPECULAR, dif);
 
-	glMatrixMode(GL_MODELVIEW);
-   	g_cam.LookAt(0.0f, 0.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-	//gluLookAt(0.0, 0.0, 50.0, 0, 0, 0, 0, 1, 0);
-	//look_at(0.0, 0.0, 50.0, 0, 0, 0, 0, 1, 1);
+    glMatrixMode(GL_MODELVIEW);
+    g_cam.LookAt(0.0f, 0.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+    //gluLookAt(0.0, 0.0, 50.0, 0, 0, 0, 0, 1, 0);
+    //look_at(0.0, 0.0, 50.0, 0, 0, 0, 0, 1, 1);
     glLightfv(GL_LIGHT0, GL_POSITION, pos);
 
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_NORMALIZE);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_NORMALIZE);
     //glEnable(GL_MULTISAMPLE);
     //glDisable(GL_MULTISAMPLE);
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(1.0, 1.0, 1.0, 1.0);
-	glColor3f(1.0,1.0,1.0);	
+    glColor3f(1.0,1.0,1.0); 
 
     glColorMaterial(GL_FRONT, GL_DIFFUSE);
 
@@ -207,7 +207,7 @@ void draw_vector(Vectorf const &v, GLdouble len, GLdouble scale,
         gluCylinder(g_qobj, radius*4, 0.0, radius*15, 20, 10);
         glRotatef(180.0f, 1.0f, 0.0f, 0.0f);
         gluDisk(g_qobj, 0.0, radius*4, 20, 1);
-    	break;
+        break;
 
     case Ball:
         gluSphere(g_qobj, radius*4, 20, 20);
@@ -231,19 +231,19 @@ void draw_something()
 
     //glEnable(GL_COLOR_MATERIAL);
     glColor3d(1.0, 0.57, 0.04);
-	glutSolidTeapot(0.5);
+    glutSolidTeapot(0.5);
     //glDisable(GL_COLOR_MATERIAL);
 }
 
 void motion_function(int x, int y)
 {
-	if (g_left_button_down || g_right_button_down)
-	{
-		g_yrot += x - g_last_x;
-		g_xrot += y - g_last_y;
-		g_last_x = x;
-		g_last_y = y;
-		
+    if (g_left_button_down || g_right_button_down)
+    {
+        g_yrot += x - g_last_x;
+        g_xrot += y - g_last_y;
+        g_last_x = x;
+        g_last_y = y;
+        
         if (g_left_button_down) {
             g_trackball.Update((float)(2.0*(x-g_viewport[0])/g_viewport[2]-1), (float)(2.0*(g_viewport[3]-y-1-g_viewport[1])/g_viewport[3]-1));
             g_trackball.BuildRotMatrix(g_rotm);
@@ -251,31 +251,31 @@ void motion_function(int x, int y)
             g_world_trackball.Update((float)(2.0*(x-g_viewport[0])/g_viewport[2]-1), (float)(2.0*(g_viewport[3]-y-1-g_viewport[1])/g_viewport[3]-1));
             g_world_trackball.BuildRotMatrix(g_world_rotm);
         }
-		glutPostRedisplay();
-	}
+        glutPostRedisplay();
+    }
 }
 
 void mouse_function(int button, int state, int x, int y)
 {
-	bool down = (state == GLUT_DOWN);
+    bool down = (state == GLUT_DOWN);
 
-	switch (button) 
-	{
-	case GLUT_LEFT_BUTTON: g_left_button_down = down; break;
-	case GLUT_MIDDLE_BUTTON: g_middle_button_down = down; break;
-	case GLUT_RIGHT_BUTTON: g_right_button_down = down; break;
-	}
+    switch (button) 
+    {
+    case GLUT_LEFT_BUTTON: g_left_button_down = down; break;
+    case GLUT_MIDDLE_BUTTON: g_middle_button_down = down; break;
+    case GLUT_RIGHT_BUTTON: g_right_button_down = down; break;
+    }
 
-	if (g_left_button_down) {
-		g_trackball.Start((float)(2.0*(x-g_viewport[0])/g_viewport[2]-1), (float)(2.0*(g_viewport[3]-y-1-g_viewport[1])/g_viewport[3]-1));
-	}
+    if (g_left_button_down) {
+        g_trackball.Start((float)(2.0*(x-g_viewport[0])/g_viewport[2]-1), (float)(2.0*(g_viewport[3]-y-1-g_viewport[1])/g_viewport[3]-1));
+    }
 
     if (g_right_button_down) {
         g_world_trackball.Start((float)(2.0*(x-g_viewport[0])/g_viewport[2]-1), (float)(2.0*(g_viewport[3]-y-1-g_viewport[1])/g_viewport[3]-1));
     }
 
-	g_last_x = x;
-	g_last_y = y;	
+    g_last_x = x;
+    g_last_y = y;   
 }
 
 void draw_rot_info()
@@ -308,7 +308,7 @@ void draw_rot_info()
 
 void display(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (g_eular_start) {
         g_rotm.IdentityMatrix();
@@ -328,11 +328,11 @@ void display(void)
     }
 
 
-	//if (!g_left_button_down) 
-	//{
-		//g_trackball.Update(g_trackball.GetUpdateQuat());
-		//g_trackball.BuildRotMatrix(g_rotm);
-	//}
+    //if (!g_left_button_down) 
+    //{
+        //g_trackball.Update(g_trackball.GetUpdateQuat());
+        //g_trackball.BuildRotMatrix(g_rotm);
+    //}
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
@@ -342,11 +342,11 @@ void display(void)
         glPushMatrix();
             draw_axes(1.3, 1.0);
         glPopMatrix();
-	    glPushMatrix();
-		    glMultMatrixf(g_rotm);
+        glPushMatrix();
+            glMultMatrixf(g_rotm);
             draw_axes(0.7, 3.0);
-    	    draw_something();
-	    glPopMatrix();
+            draw_something();
+        glPopMatrix();
     glPopMatrix();
 
     glDisable(GL_COLOR_MATERIAL);
@@ -354,7 +354,7 @@ void display(void)
     draw_rot_info();
 
     if (g_eular_start) {
-        if (g_heading < g_heading_stop)	{
+        if (g_heading < g_heading_stop) {
             g_heading += g_rotspeed;//g_heading_stop / g_rotsteps;
             //sprintf(strbuf, "heading: %0.3f", g_heading);
             //printf("heading: %0.3f", g_heading);
@@ -371,7 +371,7 @@ void display(void)
         }
     }
 
-	glutSwapBuffers();
+    glutSwapBuffers();
 
 }
 
@@ -393,17 +393,17 @@ void keyboard(unsigned char key, int x, int y)
 
 void reshape(int w, int h)
 {
-	glViewport(0, 0, w, h);
-	glGetIntegerv(GL_VIEWPORT, g_viewport);
+    glViewport(0, 0, w, h);
+    glGetIntegerv(GL_VIEWPORT, g_viewport);
 
-	//g_cam.Frustum(-10.0f, 10.0f, -10.0f, 10.0f, 10.0f, 150.0f);
-	g_cam.Perspective(45.0f, float(w) / float(h), 1.0f, 100.0f);
-	//g_cam.Ortho(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 100.0f);
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
-	//glOrtho(-50.0, 50.0, -50.0, 50.0, 0.0, 150.0);
-	glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
+    //g_cam.Frustum(-10.0f, 10.0f, -10.0f, 10.0f, 10.0f, 150.0f);
+    g_cam.Perspective(45.0f, float(w) / float(h), 1.0f, 100.0f);
+    //g_cam.Ortho(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 100.0f);
+    //glMatrixMode(GL_PROJECTION);
+    //glLoadIdentity();
+    //glOrtho(-50.0, 50.0, -50.0, 50.0, 0.0, 150.0);
+    glMatrixMode(GL_MODELVIEW);
+    //glLoadIdentity();
     g_asize = 0.0075;//6.0 / sqrt((double)w*w+h*h);
 }
 
@@ -411,19 +411,19 @@ int main(int argc, char **argv)
 {
     g_qobj = 0;
 
-	glutInit(&argc, argv);
-	//glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
+    glutInit(&argc, argv);
+    //glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutInitDisplayString("double rgb depth samples=16");
-	glutInitWindowSize(512,512);
-	glutCreateWindow("Transform");
-	init();
-	glutMouseFunc(mouse_function);
-	glutMotionFunc(motion_function);
-	glutReshapeFunc(reshape);
-	glutDisplayFunc(display);
-	glutIdleFunc(display);
+    glutInitWindowSize(512,512);
+    glutCreateWindow("Transform");
+    init();
+    glutMouseFunc(mouse_function);
+    glutMotionFunc(motion_function);
+    glutReshapeFunc(reshape);
+    glutDisplayFunc(display);
+    glutIdleFunc(display);
     glutKeyboardFunc(keyboard);
-	glutMainLoop();
+    glutMainLoop();
     clear();
-	return 0;
+    return 0;
 }

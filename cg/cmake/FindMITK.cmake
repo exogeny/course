@@ -4,17 +4,21 @@
 #  MITK_LIBRARIES, the libraries to link against
 #  MITK_FOUND, if false, do not try to use MITK.
 
-if(not MITK_DIR)
-  set(MITK_DIR "MITK" CACHE PATH "Path to MITK header and library files") 
-else(not MITK_DIR)
+if(WIN32)
+  set(arch "32")
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(arch "64")
+  endif()
+
+  set(MITK_DIR         ${cg_examples_SOURCE_DIR}/mitk/win${arch})
   set(MITK_INCLUDE_DIR ${MITK_DIR}/Include)
   set(MITK_LIBRARY_DIR ${MITK_DIR}/Lib)
   if(WIN32)
-    FIND_LIBRARY(MITK_mitk_LIBRARY NAMES Mitk_dll PATHS ${MITK_LIBRARY_DIR})
-  else (WIN32)
-    FIND_LIBRARY(MITK_mitk_LIBRARY NAMES mitk Mitk MITK PATHS ${MITK_LIBRARY_DIR})
+    FIND_LIBRARY(MITK_mitk_LIBRARY NAMES mitkCommon PATHS ${MITK_LIBRARY_DIR})
+  else(WIN32)
+    message("Not support the mitk on this platform.")
   endif(WIN32)
-endif(not MITK_DIR)
+endif()
 
 set(MITK_FOUND "NO")
 if(MITK_INCLUDE_DIR AND MITK_LIBRARY_DIR)

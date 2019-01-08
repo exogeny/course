@@ -57,8 +57,8 @@ GLenum g_face_target[6] = {
   GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
 };
 
-GLuint g_fbo;					// Our handle to the FBO
-GLuint g_depth_buffer;			// Our handle to the depth render buffer
+GLuint g_fbo;                   // Our handle to the FBO
+GLuint g_depth_buffer;          // Our handle to the depth render buffer
 GLsizei g_cm_width;
 GLsizei g_cm_height;
 
@@ -94,7 +94,7 @@ int g_last_y = 0;
 int g_texgen_mode = GL_REFLECTION_MAP;
 int g_tex_wrap = GL_CLAMP_TO_EDGE;
 
-unsigned int g_filter = 2;				// Which Filter To Use
+unsigned int g_filter = 2;              // Which Filter To Use
 
 unsigned int const MODEL_NUM = 7;
 unsigned int g_model = 4;
@@ -212,7 +212,7 @@ bool init_fbo()
     glGenFramebuffers(1, &g_fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, g_fbo);
 
-    // Create the render buffer for depth	
+    // Create the render buffer for depth   
     glGenRenderbuffers(1, &g_depth_buffer);
     glBindRenderbuffer(GL_RENDERBUFFER, g_depth_buffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, g_cm_height, g_cm_height);
@@ -227,30 +227,30 @@ bool init_fbo()
 
 void update_texgen()
 {
-	if (g_cubemap)
-	{
-		glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, g_texgen_mode);
-		glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, g_texgen_mode);
-		glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, g_texgen_mode);
-	}
-	else
-	{
-		GLint genmode = GL_SPHERE_MAP;
-		//GLenum pname = GL_OBJECT_PLANE;
-		//GLfloat planes[4] = {0.05f, 0.0f, 0.0f, 0.0f};
-		//GLfloat planet[4] = {0.0f, 0.05f, 0.0f, 0.0f};
-		glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, genmode); // Set The Texture Generation Mode For S To Sphere Mapping (NEW)
-		glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, genmode); // Set The Texture Generation Mode For T To Sphere Mapping (NEW)
-		//glTexGenfv(GL_S, pname, planes);
-		//glTexGenfv(GL_T, pname, planet);
-	}
+    if (g_cubemap)
+    {
+        glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, g_texgen_mode);
+        glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, g_texgen_mode);
+        glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, g_texgen_mode);
+    }
+    else
+    {
+        GLint genmode = GL_SPHERE_MAP;
+        //GLenum pname = GL_OBJECT_PLANE;
+        //GLfloat planes[4] = {0.05f, 0.0f, 0.0f, 0.0f};
+        //GLfloat planet[4] = {0.0f, 0.05f, 0.0f, 0.0f};
+        glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, genmode); // Set The Texture Generation Mode For S To Sphere Mapping (NEW)
+        glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, genmode); // Set The Texture Generation Mode For T To Sphere Mapping (NEW)
+        //glTexGenfv(GL_S, pname, planes);
+        //glTexGenfv(GL_T, pname, planet);
+    }
 }
 
 void update_wrap()
 {
-	glBindTexture(GL_TEXTURE_CUBE_MAP, g_cm_texture_id[g_filter]);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, g_tex_wrap);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, g_tex_wrap);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, g_cm_texture_id[g_filter]);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, g_tex_wrap);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, g_tex_wrap);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, g_tex_wrap);
     for (int i=0; i<18; i++)
     {
@@ -262,175 +262,175 @@ void update_wrap()
 
 bool load_cube_map_bg_textures()
 {
-	mitkBMPReader *reader = new mitkBMPReader();
-	reader->AddFileName("data/dyncubemap/cm_right.bmp");
+    mitkBMPReader *reader = new mitkBMPReader();
+    reader->AddFileName("data/dyncubemap/cm_right.bmp");
     reader->AddFileName("data/dyncubemap/cm_left.bmp");
-	reader->AddFileName("data/dyncubemap/cm_top.bmp");
-	reader->AddFileName("data/dyncubemap/cm_bottom.bmp");
-	reader->AddFileName("data/dyncubemap/cm_back.bmp");
-	reader->AddFileName("data/dyncubemap/cm_front.bmp");
+    reader->AddFileName("data/dyncubemap/cm_top.bmp");
+    reader->AddFileName("data/dyncubemap/cm_bottom.bmp");
+    reader->AddFileName("data/dyncubemap/cm_back.bmp");
+    reader->AddFileName("data/dyncubemap/cm_front.bmp");
 
-	bool success = reader->Run();
-	if (success)
-	{
-		mitkVolume *teximgs = reader->GetOutput();
+    bool success = reader->Run();
+    if (success)
+    {
+        mitkVolume *teximgs = reader->GetOutput();
 
-		glGenTextures(18, g_cm_bg_texture_id);
+        glGenTextures(18, g_cm_bg_texture_id);
 
-		for (int loop=0; loop<6; loop++)
-		{
-			// Create Nearest Filtered Texture
-			glBindTexture(GL_TEXTURE_2D, g_cm_bg_texture_id[loop]);	// Gen Tex 0 and 1
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, teximgs->GetWidth(), teximgs->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
+        for (int loop=0; loop<6; loop++)
+        {
+            // Create Nearest Filtered Texture
+            glBindTexture(GL_TEXTURE_2D, g_cm_bg_texture_id[loop]); // Gen Tex 0 and 1
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, teximgs->GetWidth(), teximgs->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
 
-			// Create Linear Filtered Texture
-			glBindTexture(GL_TEXTURE_2D, g_cm_bg_texture_id[loop+6]);	// Gen Tex 2 and 3
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, teximgs->GetWidth(), teximgs->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
+            // Create Linear Filtered Texture
+            glBindTexture(GL_TEXTURE_2D, g_cm_bg_texture_id[loop+6]);   // Gen Tex 2 and 3
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, teximgs->GetWidth(), teximgs->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
 
-			// Create MipMapped Texture
-			glBindTexture(GL_TEXTURE_2D, g_cm_bg_texture_id[loop+12]);	// Gen Tex 4 and 5
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
-			gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, teximgs->GetWidth(), teximgs->GetHeight(), GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
-		}
+            // Create MipMapped Texture
+            glBindTexture(GL_TEXTURE_2D, g_cm_bg_texture_id[loop+12]);  // Gen Tex 4 and 5
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+            gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, teximgs->GetWidth(), teximgs->GetHeight(), GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
+        }
 
-		teximgs->Delete();
-	}
+        teximgs->Delete();
+    }
 
-	reader->Delete();
-	return success;
+    reader->Delete();
+    return success;
 }
 
 bool load_cube_map_textures()
 {
-	mitkBMPReader *reader = new mitkBMPReader();
-	reader->AddFileName("data/dyncubemap/cm_right.bmp");
-	reader->AddFileName("data/dyncubemap/cm_left.bmp");
-	reader->AddFileName("data/dyncubemap/cm_top.bmp");
-	reader->AddFileName("data/dyncubemap/cm_bottom.bmp");
-	reader->AddFileName("data/dyncubemap/cm_back.bmp");
-	reader->AddFileName("data/dyncubemap/cm_front.bmp");
+    mitkBMPReader *reader = new mitkBMPReader();
+    reader->AddFileName("data/dyncubemap/cm_right.bmp");
+    reader->AddFileName("data/dyncubemap/cm_left.bmp");
+    reader->AddFileName("data/dyncubemap/cm_top.bmp");
+    reader->AddFileName("data/dyncubemap/cm_bottom.bmp");
+    reader->AddFileName("data/dyncubemap/cm_back.bmp");
+    reader->AddFileName("data/dyncubemap/cm_front.bmp");
 
-	bool success = reader->Run();
-	if (success)
-	{
-		mitkVolume *teximgs = reader->GetOutput();
+    bool success = reader->Run();
+    if (success)
+    {
+        mitkVolume *teximgs = reader->GetOutput();
 
         g_cm_width = teximgs->GetWidth();
         g_cm_height = teximgs->GetHeight();
 
         glGenTextures(3, g_cm_texture_id);
 
-		for (int loop=0; loop<6; loop++)
-		{
-				// Create Nearest Filtered Texture
-				glBindTexture(GL_TEXTURE_CUBE_MAP, g_cm_texture_id[0]);
-				glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-				glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-				glTexImage2D(g_face_target[loop], 0, GL_RGB, g_cm_width, g_cm_height, 0, GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
-				
-				// Create Linear Filtered Texture
-				glBindTexture(GL_TEXTURE_CUBE_MAP, g_cm_texture_id[1]);
-				glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-				glTexImage2D(g_face_target[loop], 0, GL_RGB, g_cm_width, g_cm_height, 0, GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
-				
-				// Create MipMapped Texture
-				glBindTexture(GL_TEXTURE_CUBE_MAP, g_cm_texture_id[2]);
-				glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
-				gluBuild2DMipmaps(g_face_target[loop], GL_RGB, g_cm_width, g_cm_height, GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
-		}
+        for (int loop=0; loop<6; loop++)
+        {
+                // Create Nearest Filtered Texture
+                glBindTexture(GL_TEXTURE_CUBE_MAP, g_cm_texture_id[0]);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+                glTexImage2D(g_face_target[loop], 0, GL_RGB, g_cm_width, g_cm_height, 0, GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
+                
+                // Create Linear Filtered Texture
+                glBindTexture(GL_TEXTURE_CUBE_MAP, g_cm_texture_id[1]);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+                glTexImage2D(g_face_target[loop], 0, GL_RGB, g_cm_width, g_cm_height, 0, GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
+                
+                // Create MipMapped Texture
+                glBindTexture(GL_TEXTURE_CUBE_MAP, g_cm_texture_id[2]);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
+                gluBuild2DMipmaps(g_face_target[loop], GL_RGB, g_cm_width, g_cm_height, GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
+        }
 
-		teximgs->Delete();
-	}
+        teximgs->Delete();
+    }
 
-	reader->Delete();
-	return success;
+    reader->Delete();
+    return success;
 }
 
 bool load_textures()
 {
-	mitkBMPReader *reader = new mitkBMPReader();
-	reader->AddFileName("data/dyncubemap/BG.bmp");
-	reader->AddFileName("data/dyncubemap/Reflect.bmp");
+    mitkBMPReader *reader = new mitkBMPReader();
+    reader->AddFileName("data/dyncubemap/BG.bmp");
+    reader->AddFileName("data/dyncubemap/Reflect.bmp");
 
-	bool success = reader->Run();
-	if (success)
-	{
-		mitkVolume *teximgs = reader->GetOutput();
+    bool success = reader->Run();
+    if (success)
+    {
+        mitkVolume *teximgs = reader->GetOutput();
 
-		glGenTextures(6, g_texture_id);
-		for (int loop=0; loop<2; loop++)
-		{
-			// Create Nearest Filtered Texture
-			glBindTexture(GL_TEXTURE_2D, g_texture_id[loop]);	// Gen Tex 0 and 1
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, teximgs->GetWidth(), teximgs->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
+        glGenTextures(6, g_texture_id);
+        for (int loop=0; loop<2; loop++)
+        {
+            // Create Nearest Filtered Texture
+            glBindTexture(GL_TEXTURE_2D, g_texture_id[loop]);   // Gen Tex 0 and 1
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, teximgs->GetWidth(), teximgs->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
 
-			// Create Linear Filtered Texture
-			glBindTexture(GL_TEXTURE_2D, g_texture_id[loop+2]);	// Gen Tex 2 and 3 4
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, teximgs->GetWidth(), teximgs->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
+            // Create Linear Filtered Texture
+            glBindTexture(GL_TEXTURE_2D, g_texture_id[loop+2]); // Gen Tex 2 and 3 4
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, teximgs->GetWidth(), teximgs->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
 
-			// Create MipMapped Texture
-			glBindTexture(GL_TEXTURE_2D, g_texture_id[loop+4]);	// Gen Tex 4 and 5
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
-			gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, teximgs->GetWidth(), teximgs->GetHeight(), GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
-		}
+            // Create MipMapped Texture
+            glBindTexture(GL_TEXTURE_2D, g_texture_id[loop+4]); // Gen Tex 4 and 5
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
+            gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, teximgs->GetWidth(), teximgs->GetHeight(), GL_RGB, GL_UNSIGNED_BYTE, teximgs->GetSliceData(loop));
+        }
 
-		teximgs->Delete();
-	}
+        teximgs->Delete();
+    }
 
-	reader->Delete();
-	return success;
+    reader->Delete();
+    return success;
 }
 
 bool load_model(char const *filename)
 {
-	mitkPLYReader *reader = new mitkPLYReader();
-	reader->AddFileName(filename);
+    mitkPLYReader *reader = new mitkPLYReader();
+    reader->AddFileName(filename);
 
-	bool succ = reader->Run();
-	if (succ)
-	{
-		if (g_mesh)
-		{
-			g_mesh->Delete();
-			g_mesh = NULL;
-		}
-		g_mesh = reader->GetOutput();
+    bool succ = reader->Run();
+    if (succ)
+    {
+        if (g_mesh)
+        {
+            g_mesh->Delete();
+            g_mesh = NULL;
+        }
+        g_mesh = reader->GetOutput();
 
-		float const *box = g_mesh->GetBoundingBox();
-		float w = box[1] - box[0];
-		float h = box[3] - box[2];
-		float d = box[5] - box[4];
-		float wc = (box[1] + box[0]) * 0.5f;
-		float hc = (box[3] + box[2]) * 0.5f;
-		float dc = (box[5] + box[4]) * 0.5f;
-		float f = 2.0f * sqrt(3.0f) / sqrt(w*w + h*h + d*d);
-		
-		float *verts = g_mesh->GetVertexData();
-		for (unsigned int i=0; i<g_mesh->GetVertexNumber(); ++i, verts+=6)
-		{
-			verts[0] = (verts[0] - wc) * f;
-			verts[1] = (verts[1] - hc) * f;
-			verts[2] = (verts[2] - dc) * f;
-		}
+        float const *box = g_mesh->GetBoundingBox();
+        float w = box[1] - box[0];
+        float h = box[3] - box[2];
+        float d = box[5] - box[4];
+        float wc = (box[1] + box[0]) * 0.5f;
+        float hc = (box[3] + box[2]) * 0.5f;
+        float dc = (box[5] + box[4]) * 0.5f;
+        float f = 2.0f * sqrt(3.0f) / sqrt(w*w + h*h + d*d);
+        
+        float *verts = g_mesh->GetVertexData();
+        for (unsigned int i=0; i<g_mesh->GetVertexNumber(); ++i, verts+=6)
+        {
+            verts[0] = (verts[0] - wc) * f;
+            verts[1] = (verts[1] - hc) * f;
+            verts[2] = (verts[2] - dc) * f;
+        }
 
-		g_mesh->ReverseNormals();
-	}
+        g_mesh->ReverseNormals();
+    }
 
-	reader->Delete();
-	
-	return succ;
+    reader->Delete();
+    
+    return succ;
 }
 
 bool init()
@@ -465,118 +465,118 @@ bool init()
         return false;
     }
 
-	update_texgen();
-	update_wrap();
+    update_texgen();
+    update_wrap();
 
-	g_rotm.IdentityMatrix();
+    g_rotm.IdentityMatrix();
 
-	glEnable(GL_NORMALIZE);
-	//glEnable(GL_AUTO_NORMAL);
-	glEnable(GL_TEXTURE_2D);							// Enable Texture Mapping
-	glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
-	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);				// Black Background
-	glClearDepth(1.0f);									// Depth Buffer Setup
-	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
-	glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
+    glEnable(GL_NORMALIZE);
+    //glEnable(GL_AUTO_NORMAL);
+    glEnable(GL_TEXTURE_2D);                            // Enable Texture Mapping
+    glShadeModel(GL_SMOOTH);                            // Enable Smooth Shading
+    glClearColor(0.0f, 0.0f, 0.0f, 0.5f);               // Black Background
+    glClearDepth(1.0f);                                 // Depth Buffer Setup
+    glEnable(GL_DEPTH_TEST);                            // Enables Depth Testing
+    glDepthFunc(GL_LEQUAL);                             // The Type Of Depth Testing To Do
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Really Nice Perspective Calculations
 
-	glLightfv(GL_LIGHT0, GL_AMBIENT, g_light_ambient);		// Setup The Ambient Light
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, g_light_diffuse);		// Setup The Diffuse Light
+    glLightfv(GL_LIGHT0, GL_AMBIENT, g_light_ambient);      // Setup The Ambient Light
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, g_light_diffuse);      // Setup The Diffuse Light
     glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 1.0f);
     glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 60.0f);
-	glEnable(GL_LIGHT0);								// Enable Light One
+    glEnable(GL_LIGHT0);                                // Enable Light One
 
-	//g_cam.LookAt(0.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+    //g_cam.LookAt(0.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
     g_timer.CounterStart();
 
-	return true;
+    return true;
 }
 
 void draw_surface(mitkMesh *mesh)
 {
-	if (mesh == NULL) return;
+    if (mesh == NULL) return;
 
-	unsigned int *facedata = mesh->GetFaceData();
-	float *vertdata = mesh->GetVertexData();
-	glBegin(GL_TRIANGLES);
-		for (unsigned int i=0; i<mesh->GetFaceNumber(); ++i)
-		{
-			glNormal3fv(vertdata + 6*facedata[3*i] + 3);
-			glVertex3fv(vertdata + 6*facedata[3*i]);
+    unsigned int *facedata = mesh->GetFaceData();
+    float *vertdata = mesh->GetVertexData();
+    glBegin(GL_TRIANGLES);
+        for (unsigned int i=0; i<mesh->GetFaceNumber(); ++i)
+        {
+            glNormal3fv(vertdata + 6*facedata[3*i] + 3);
+            glVertex3fv(vertdata + 6*facedata[3*i]);
 
-			glNormal3fv(vertdata + 6*facedata[3*i+1] + 3);
-			glVertex3fv(vertdata + 6*facedata[3*i+1]);
+            glNormal3fv(vertdata + 6*facedata[3*i+1] + 3);
+            glVertex3fv(vertdata + 6*facedata[3*i+1]);
 
-			glNormal3fv(vertdata + 6*facedata[3*i+2] + 3);
-			glVertex3fv(vertdata + 6*facedata[3*i+2]);
-		}
-	glEnd();
+            glNormal3fv(vertdata + 6*facedata[3*i+2] + 3);
+            glVertex3fv(vertdata + 6*facedata[3*i+2]);
+        }
+    glEnd();
 }
 
 void draw_wireframe(mitkMesh *mesh)
 {
-	if (mesh == NULL) return;
+    if (mesh == NULL) return;
 
-	unsigned int *facedata = mesh->GetFaceData();
-	float *vertdata = mesh->GetVertexData();
-	glBegin(GL_LINES);
-		for (unsigned int i=0; i<mesh->GetFaceNumber(); ++i)
-		{
-			glVertex3fv(&vertdata[6*facedata[3*i]]);
-			glVertex3fv(&vertdata[6*facedata[3*i+1]]);
-			glVertex3fv(&vertdata[6*facedata[3*i+1]]);
-			glVertex3fv(&vertdata[6*facedata[3*i+2]]);
-			glVertex3fv(&vertdata[6*facedata[3*i+2]]);
-			glVertex3fv(&vertdata[6*facedata[3*i]]);
-		}
-	glEnd();
+    unsigned int *facedata = mesh->GetFaceData();
+    float *vertdata = mesh->GetVertexData();
+    glBegin(GL_LINES);
+        for (unsigned int i=0; i<mesh->GetFaceNumber(); ++i)
+        {
+            glVertex3fv(&vertdata[6*facedata[3*i]]);
+            glVertex3fv(&vertdata[6*facedata[3*i+1]]);
+            glVertex3fv(&vertdata[6*facedata[3*i+1]]);
+            glVertex3fv(&vertdata[6*facedata[3*i+2]]);
+            glVertex3fv(&vertdata[6*facedata[3*i+2]]);
+            glVertex3fv(&vertdata[6*facedata[3*i]]);
+        }
+    glEnd();
 }
 
 void draw_something()
 {
-	switch (g_model)
-	{
-	case 0:
-		if (g_wireframe) glutWireTeapot(1.0);
-		else glutSolidTeapot(1.0);
-		break;
+    switch (g_model)
+    {
+    case 0:
+        if (g_wireframe) glutWireTeapot(1.0);
+        else glutSolidTeapot(1.0);
+        break;
 
-	case 1:
-		if (g_wireframe) glutWireCube(1.6);
-		else glutSolidCube(1.6);
-		break;
+    case 1:
+        if (g_wireframe) glutWireCube(1.6);
+        else glutSolidCube(1.6);
+        break;
 
-	case 2:
-		if (g_wireframe) glutWireTorus(0.4, 1.0, 50, 50);
-		else glutSolidTorus(0.4, 1.0, 50, 50);
-		break;
+    case 2:
+        if (g_wireframe) glutWireTorus(0.4, 1.0, 50, 50);
+        else glutSolidTorus(0.4, 1.0, 50, 50);
+        break;
 
-	case 3:
-		if (g_wireframe) glutWireCone(1.0, 1.5, 60, 20);
-		else glutSolidCone(1.0, 1.5, 60, 20);
-		break;
+    case 3:
+        if (g_wireframe) glutWireCone(1.0, 1.5, 60, 20);
+        else glutSolidCone(1.0, 1.5, 60, 20);
+        break;
 
-	case 4:
-		if (g_wireframe) glutWireSphere(1.0, 50, 50);
-		else glutSolidSphere(1.0, 50, 50);
-		break;
+    case 4:
+        if (g_wireframe) glutWireSphere(1.0, 50, 50);
+        else glutSolidSphere(1.0, 50, 50);
+        break;
 
-	case 5:
-		//glScalef(20.0f, 20.0f, 20.0f);
-		if (g_wireframe) glutWireIcosahedron();
-		else glutSolidIcosahedron();
-		break;
+    case 5:
+        //glScalef(20.0f, 20.0f, 20.0f);
+        if (g_wireframe) glutWireIcosahedron();
+        else glutSolidIcosahedron();
+        break;
 
-	case 6:
-		//glScalef(10.0f, 10.0f, 10.0f);
-		if (g_wireframe) draw_wireframe(g_mesh);
-		else draw_surface(g_mesh);
-		break;
+    case 6:
+        //glScalef(10.0f, 10.0f, 10.0f);
+        if (g_wireframe) draw_wireframe(g_mesh);
+        else draw_surface(g_mesh);
+        break;
 
-	default:
-		break;
-	}
+    default:
+        break;
+    }
 }
 
 void draw_background()
@@ -648,7 +648,7 @@ void draw_background()
     }
     else 
     {
-        glBindTexture(GL_TEXTURE_2D, g_texture_id[g_filter<<1]);	// This Will Select The BG Maps...
+        glBindTexture(GL_TEXTURE_2D, g_texture_id[g_filter<<1]);    // This Will Select The BG Maps...
         //glTranslatef(0.0f, 0.0f, -130.0f);
         glBegin(GL_QUADS);
             glNormal3f( 0.0f, 0.0f, 1.0f);
@@ -662,37 +662,37 @@ void draw_background()
 
 void motion_function(int x, int y)
 {
-	if (g_left_button_down)
-	{
-		g_yrot += x - g_last_x;
-		g_xrot += y - g_last_y;
-		g_last_x = x;
-		g_last_y = y;
-		g_trackball.Update((float)(2.0*(x-g_viewport[0])/g_viewport[2]-1), (float)(2.0*(g_viewport[3]-y-1-g_viewport[1])/g_viewport[3]-1));
-		g_trackball.BuildRotMatrix(g_rotm);
+    if (g_left_button_down)
+    {
+        g_yrot += x - g_last_x;
+        g_xrot += y - g_last_y;
+        g_last_x = x;
+        g_last_y = y;
+        g_trackball.Update((float)(2.0*(x-g_viewport[0])/g_viewport[2]-1), (float)(2.0*(g_viewport[3]-y-1-g_viewport[1])/g_viewport[3]-1));
+        g_trackball.BuildRotMatrix(g_rotm);
 
-		glutPostRedisplay();
-	}
+        glutPostRedisplay();
+    }
 }
 
 void mouse_function(int button, int state, int x, int y)
 {
-	bool down = (state == GLUT_DOWN);
+    bool down = (state == GLUT_DOWN);
 
-	switch (button) 
-	{
-	case GLUT_LEFT_BUTTON: g_left_button_down = down; break;
-	case GLUT_MIDDLE_BUTTON: g_middle_button_down = down; break;
-	case GLUT_RIGHT_BUTTON: g_right_button_down = down; break;
-	}
+    switch (button) 
+    {
+    case GLUT_LEFT_BUTTON: g_left_button_down = down; break;
+    case GLUT_MIDDLE_BUTTON: g_middle_button_down = down; break;
+    case GLUT_RIGHT_BUTTON: g_right_button_down = down; break;
+    }
 
-	if (g_left_button_down)
-	{
-		g_trackball.Start((float)(2.0*(x-g_viewport[0])/g_viewport[2]-1), (float)(2.0*(g_viewport[3]-y-1-g_viewport[1])/g_viewport[3]-1));
-	}
+    if (g_left_button_down)
+    {
+        g_trackball.Start((float)(2.0*(x-g_viewport[0])/g_viewport[2]-1), (float)(2.0*(g_viewport[3]-y-1-g_viewport[1])/g_viewport[3]-1));
+    }
 
-	g_last_x = x;
-	g_last_y = y;	
+    g_last_x = x;
+    g_last_y = y;   
 }
 
 void draw_objects()
@@ -788,7 +788,7 @@ void create_dynamic_cube_map()
         glPushMatrix();
 
         g_cam.LookAt(g_objpos.ele[0], g_objpos.ele[1], g_objpos.ele[2], g_campos.ele[0], g_campos.ele[1], g_campos.ele[2], up.ele[0], up.ele[1], up.ele[2]);
-        glLightfv(GL_LIGHT0, GL_POSITION, g_light_position);	// Position The Light
+        glLightfv(GL_LIGHT0, GL_POSITION, g_light_position);    // Position The Light
         glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, g_light_direction);
 
         glPushMatrix();
@@ -820,7 +820,7 @@ void create_dynamic_cube_map()
 
 void display()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (!g_left_button_down) 
     {
@@ -843,22 +843,22 @@ void display()
     g_campos += g_objpos;
     g_campos.ele[3] = 1.0f;
     g_cam.LookAt(g_campos.ele[0], g_campos.ele[1], g_campos.ele[2], g_objpos.ele[0], g_objpos.ele[1], g_objpos.ele[2], up.ele[0], up.ele[1], up.ele[2]);
-    glLightfv(GL_LIGHT0, GL_POSITION, g_light_position);	// Position The Light
+    glLightfv(GL_LIGHT0, GL_POSITION, g_light_position);    // Position The Light
     glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, g_light_direction);
 
-	glPushMatrix();
+    glPushMatrix();
 
-	if (g_obj_cubemap)
-	{
-		Matrixf mat = g_cam.GetInverseOfViewMatrix();
-		mat.ele[12] = mat.ele[13] = mat.ele[14] = 0.0f;
-		mat.ele[3] = mat.ele[7] = mat.ele[11] = 0.0f;
-		mat.ele[15] = 1.0f;
-		glMatrixMode(GL_TEXTURE);
-		glPushMatrix();
-		glLoadMatrixf(mat);
-		glMatrixMode(GL_MODELVIEW);
-	}
+    if (g_obj_cubemap)
+    {
+        Matrixf mat = g_cam.GetInverseOfViewMatrix();
+        mat.ele[12] = mat.ele[13] = mat.ele[14] = 0.0f;
+        mat.ele[3] = mat.ele[7] = mat.ele[11] = 0.0f;
+        mat.ele[15] = 1.0f;
+        glMatrixMode(GL_TEXTURE);
+        glPushMatrix();
+        glLoadMatrixf(mat);
+        glMatrixMode(GL_MODELVIEW);
+    }
 
     glTranslatef(g_objpos.ele[0], g_objpos.ele[1], g_objpos.ele[2]);
     draw_objects();
@@ -869,9 +869,9 @@ void display()
     g_material_diffuse[1] = 0.9f;
     g_material_diffuse[2] = 0.9f;
     set_material();
-    glEnable(GL_TEXTURE_GEN_S);							// Enable Texture Coord Generation For S (NEW)
-	glEnable(GL_TEXTURE_GEN_T);							// Enable Texture Coord Generation For T (NEW)
-	if (g_cubemap) glEnable(GL_TEXTURE_GEN_R);
+    glEnable(GL_TEXTURE_GEN_S);                         // Enable Texture Coord Generation For S (NEW)
+    glEnable(GL_TEXTURE_GEN_T);                         // Enable Texture Coord Generation For T (NEW)
+    if (g_cubemap) glEnable(GL_TEXTURE_GEN_R);
     if (g_cubemap) glEnable(GL_TEXTURE_CUBE_MAP);
     else {
         glEnable(GL_TEXTURE_2D);
@@ -880,7 +880,7 @@ void display()
 
     draw_something();
 
-	glPopMatrix();
+    glPopMatrix();
 
     if (g_obj_cubemap) {
         glMatrixMode(GL_TEXTURE);
@@ -888,17 +888,17 @@ void display()
         glMatrixMode(GL_MODELVIEW);
     }
 
-	glDisable(GL_TEXTURE_GEN_S);
-	glDisable(GL_TEXTURE_GEN_T);
-	if (g_cubemap) glDisable(GL_TEXTURE_GEN_R);
-	glDisable(GL_TEXTURE_CUBE_MAP);
+    glDisable(GL_TEXTURE_GEN_S);
+    glDisable(GL_TEXTURE_GEN_T);
+    if (g_cubemap) glDisable(GL_TEXTURE_GEN_R);
+    glDisable(GL_TEXTURE_CUBE_MAP);
 
     glDisable(GL_LIGHTING);
-	glPushMatrix();
-	draw_background();
-	glPopMatrix();
+    glPushMatrix();
+    draw_background();
+    glPopMatrix();
 
-	glutSwapBuffers();
+    glutSwapBuffers();
 
     double dt = g_timer.GetCounts() / g_timer.GetFrequence();
     g_timer.CounterStart();
@@ -911,84 +911,84 @@ void display()
 
 void reshape(int w, int h)
 {
-	glViewport(0, 0, w, h);
-	glGetIntegerv(GL_VIEWPORT, g_viewport);
+    glViewport(0, 0, w, h);
+    glGetIntegerv(GL_VIEWPORT, g_viewport);
 
-	//g_cam.Frustum(-10.0f, 10.0f, -10.0f, 10.0f, 10.0f, 150.0f);
-	g_cam.Perspective(60.0f, float(w) / float(h), 2.0f, 5000.0f);
-	//g_cam.Ortho(-50.0f, 50.0f, -50.0f, 50.0f, 10.0f, 150.0f);
+    //g_cam.Frustum(-10.0f, 10.0f, -10.0f, 10.0f, 10.0f, 150.0f);
+    g_cam.Perspective(60.0f, float(w) / float(h), 2.0f, 5000.0f);
+    //g_cam.Ortho(-50.0f, 50.0f, -50.0f, 50.0f, 10.0f, 150.0f);
 }
 
 void keyboard(unsigned char key, int x, int y)
 {
-	switch (key)
-	{
-	case 27:
-		exit(0);
-		break;
+    switch (key)
+    {
+    case 27:
+        exit(0);
+        break;
 
-	case 'f':
-		g_filter = (g_filter+1) % 3;
-		break;
+    case 'f':
+        g_filter = (g_filter+1) % 3;
+        break;
 
-	case 'c':
+    case 'c':
         if (g_tex_wrap == GL_REPEAT) g_tex_wrap = GL_CLAMP;
         else if (g_tex_wrap == GL_CLAMP) g_tex_wrap = GL_CLAMP_TO_EDGE;
         else g_tex_wrap = GL_REPEAT;
-		update_wrap();
-		break;
+        update_wrap();
+        break;
 
-	case ',':
-		g_model = (g_model+MODEL_NUM-1) % MODEL_NUM;
-		break;
+    case ',':
+        g_model = (g_model+MODEL_NUM-1) % MODEL_NUM;
+        break;
 
-	case '.':
-		g_model = (g_model+1) % MODEL_NUM;
-		break;
+    case '.':
+        g_model = (g_model+1) % MODEL_NUM;
+        break;
 
-	case 'w':
-		g_wireframe = !g_wireframe;
-		break;
+    case 'w':
+        g_wireframe = !g_wireframe;
+        break;
 
-	case 'b':
-		g_cubemap = !g_cubemap;
-		update_texgen();
-		break;
+    case 'b':
+        g_cubemap = !g_cubemap;
+        update_texgen();
+        break;
 
-	case 'm':
-		if (g_cubemap)
-		{
-			if (g_texgen_mode == GL_REFLECTION_MAP) g_texgen_mode = GL_NORMAL_MAP;
-			else g_texgen_mode = GL_REFLECTION_MAP;
-			update_texgen();
-		}
-		break;
+    case 'm':
+        if (g_cubemap)
+        {
+            if (g_texgen_mode == GL_REFLECTION_MAP) g_texgen_mode = GL_NORMAL_MAP;
+            else g_texgen_mode = GL_REFLECTION_MAP;
+            update_texgen();
+        }
+        break;
 
-	case 's':
-		g_obj_cubemap = !g_obj_cubemap;
-		break;
+    case 's':
+        g_obj_cubemap = !g_obj_cubemap;
+        break;
 
-	default:
-		break;
-	}
+    default:
+        break;
+    }
 }
 
 int main(int argc, char *argv[])
 {
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-	glutInitWindowSize(512,512);
-	glutCreateWindow("Dynamic Cube Map");
-	if (!init()) return 1;
-	glutMouseFunc(mouse_function);
-	glutMotionFunc(motion_function);
-	glutKeyboardFunc(keyboard);
-	glutReshapeFunc(reshape);
-	glutDisplayFunc(display);
-	glutIdleFunc(display);
-	glutMainLoop();
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(512,512);
+    glutCreateWindow("Dynamic Cube Map");
+    if (!init()) return 1;
+    glutMouseFunc(mouse_function);
+    glutMotionFunc(motion_function);
+    glutKeyboardFunc(keyboard);
+    glutReshapeFunc(reshape);
+    glutDisplayFunc(display);
+    glutIdleFunc(display);
+    glutMainLoop();
 
-	if (g_mesh) g_mesh->Delete();
+    if (g_mesh) g_mesh->Delete();
 
-	return 0;
+    return 0;
 }

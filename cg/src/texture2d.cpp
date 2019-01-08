@@ -33,9 +33,9 @@ GLuint g_texture_id[MAX_TEXTURES];
 
 float g_xrot = 30.0f;
 float g_yrot = 30.0f;
-float g_xspeed = 0.0f;			// X Rotation Speed
-float g_yspeed = 0.0f;			// Y Rotation Speed
-float g_z=-6.0f;		// Depth Into The Screen
+float g_xspeed = 0.0f;          // X Rotation Speed
+float g_yspeed = 0.0f;          // Y Rotation Speed
+float g_z=-6.0f;        // Depth Into The Screen
 
 int g_window_width = 512;
 int g_window_height = 512;
@@ -55,45 +55,45 @@ float g_color_background[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 float g_color_foreground[] = { 1.0f-g_color_background[0], 1.0f-g_color_background[1], 1.0f-g_color_background[2], 1.0f};
 
 float g_cube_v[][3] = {
-	{-1.0f, -1.0f,  1.0f},
-	{ 1.0f, -1.0f,  1.0f},
-	{ 1.0f,  1.0f,  1.0f},
-	{-1.0f,  1.0f,  1.0f},
-	{-1.0f, -1.0f, -1.0f},
-	{-1.0f,  1.0f, -1.0f},
-	{ 1.0f,  1.0f, -1.0f},
-	{ 1.0f, -1.0f, -1.0f}
+    {-1.0f, -1.0f,  1.0f},
+    { 1.0f, -1.0f,  1.0f},
+    { 1.0f,  1.0f,  1.0f},
+    {-1.0f,  1.0f,  1.0f},
+    {-1.0f, -1.0f, -1.0f},
+    {-1.0f,  1.0f, -1.0f},
+    { 1.0f,  1.0f, -1.0f},
+    { 1.0f, -1.0f, -1.0f}
 };
 
-unsigned int	g_filter = 2;				// Which Filter To Use
+unsigned int    g_filter = 2;               // Which Filter To Use
 unsigned int    g_step = 5;
-bool	g_light = true;				// Lighting ON/OFF ( NEW )
-bool	g_lp = false;					// L Pressed? ( NEW )
-bool	g_fp = false;					// F Pressed? ( NEW )
-bool	g_fullscreen = false;
+bool    g_light = true;             // Lighting ON/OFF ( NEW )
+bool    g_lp = false;                   // L Pressed? ( NEW )
+bool    g_fp = false;                   // F Pressed? ( NEW )
+bool    g_fullscreen = false;
 
 
 // output image in the frame buffer as bmp file
 //#pragma pack(2)
-//typedef struct	tag_BITMAP_FILE_HEADER
+//typedef struct    tag_BITMAP_FILE_HEADER
 //{
-//    unsigned short	bfType; 
-//    unsigned long	bfSize; 
-//    unsigned short	bfReserved1; 
-//    unsigned short	bfReserved2; 
-//    unsigned long	bfOffBits;
-//    unsigned long	biSize;
+//    unsigned short    bfType; 
+//    unsigned long bfSize; 
+//    unsigned short    bfReserved1; 
+//    unsigned short    bfReserved2; 
+//    unsigned long bfOffBits;
+//    unsigned long biSize;
 //    unsigned long   biWidth;
 //    unsigned long   biHeight;
 //    unsigned short  biPlanes;
 //    unsigned short  biBitCount;
-//    unsigned long	biCompression;
-//    unsigned long	biSizeImage;
+//    unsigned long biCompression;
+//    unsigned long biSizeImage;
 //    unsigned long   biXPelsPerMeter;
 //    unsigned long   biYPelsPerMeter;
-//    unsigned long	biClrUsed;
-//    unsigned long	biClrImportant;
-//}	BITMAP_FILE_HEADER; 
+//    unsigned long biClrUsed;
+//    unsigned long biClrImportant;
+//} BITMAP_FILE_HEADER; 
 //#pragma pack()
 
 inline void set_pixel_transfer(float scale,float bias)
@@ -111,22 +111,22 @@ bool save_framebuffer(char const *filename)
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
 
-	FIBITMAP *dib = FreeImage_Allocate(viewport[2], viewport[3], 24);
-	if (!dib) return false;
+    FIBITMAP *dib = FreeImage_Allocate(viewport[2], viewport[3], 24);
+    if (!dib) return false;
 
-	bool status(false);
-	BYTE *bits = FreeImage_GetBits(dib);
-	if (bits) {
-		glPixelStorei(GL_PACK_ALIGNMENT, 4); // Force 4-byte alignment 
-		set_pixel_transfer(1.0f, 0.0f);
-		glReadPixels(viewport[0], viewport[1], viewport[2], viewport[3], GL_BGR, GL_UNSIGNED_BYTE, bits);
+    bool status(false);
+    BYTE *bits = FreeImage_GetBits(dib);
+    if (bits) {
+        glPixelStorei(GL_PACK_ALIGNMENT, 4); // Force 4-byte alignment 
+        set_pixel_transfer(1.0f, 0.0f);
+        glReadPixels(viewport[0], viewport[1], viewport[2], viewport[3], GL_BGR, GL_UNSIGNED_BYTE, bits);
 
-		if (FreeImage_Save(FIF_PNG, dib, filename)) status = true;
-	}
+        if (FreeImage_Save(FIF_PNG, dib, filename)) status = true;
+    }
 
-	FreeImage_Unload(dib);
+    FreeImage_Unload(dib);
 
-	return status;
+    return status;
 
     //int widthbytes = viewport[2] * 3;
     //widthbytes = (widthbytes + 3) & ~3;
@@ -176,7 +176,7 @@ bool save_framebuffer(char const *filename)
     //FILE *fp = fopen(filename, "wb");
     //fwrite(&fh,sizeof(BITMAP_FILE_HEADER),1,fp);
     //fwrite(pixels,sizeof(char),framebytes,fp);
-    //fclose(fp);	
+    //fclose(fp);   
 
     //return 0;
 }
@@ -184,12 +184,12 @@ bool save_framebuffer(char const *filename)
 
 void set_material()
 {
-	GLenum face = GL_FRONT_AND_BACK;
-	glMaterialfv(face, GL_AMBIENT, g_material_ambient);
-	glMaterialfv(face, GL_DIFFUSE, g_material_diffuse);
-	glMaterialfv(face, GL_SPECULAR, g_material_specular);
-	glMaterialfv(face, GL_EMISSION, g_material_emission);
-	glMaterialf(face, GL_SHININESS, g_material_specular_power);
+    GLenum face = GL_FRONT_AND_BACK;
+    glMaterialfv(face, GL_AMBIENT, g_material_ambient);
+    glMaterialfv(face, GL_DIFFUSE, g_material_diffuse);
+    glMaterialfv(face, GL_SPECULAR, g_material_specular);
+    glMaterialfv(face, GL_EMISSION, g_material_emission);
+    glMaterialf(face, GL_SHININESS, g_material_specular_power);
 }
 
 FIBITMAP* load_image(char const *filename, int flag = 0)
@@ -199,417 +199,417 @@ FIBITMAP* load_image(char const *filename, int flag = 0)
     if (fif == FIF_UNKNOWN) fif = FreeImage_GetFIFFromFilename(filename);
     if (fif == FIF_UNKNOWN) return false;
 
-	return FreeImage_Load(fif, filename, flag);	
+    return FreeImage_Load(fif, filename, flag); 
 }
 
 bool load_textures()
 {
-	FIBITMAP *tdib = load_image("data/texture2d/rockwall.tga");
-	if (!tdib) return false;
+    FIBITMAP *tdib = load_image("data/texture2d/rockwall.tga");
+    if (!tdib) return false;
 
-	bool status(false);
-	unsigned int bpp = FreeImage_GetBPP(tdib);
+    bool status(false);
+    unsigned int bpp = FreeImage_GetBPP(tdib);
 
-	FIBITMAP *dib = tdib;
-	if (bpp != 24) dib = FreeImage_ConvertTo24Bits(tdib);
+    FIBITMAP *dib = tdib;
+    if (bpp != 24) dib = FreeImage_ConvertTo24Bits(tdib);
 
-	BYTE *bits = FreeImage_GetBits(dib);
-	unsigned int width = FreeImage_GetWidth(dib);
-	unsigned int height = FreeImage_GetHeight(dib);
+    BYTE *bits = FreeImage_GetBits(dib);
+    unsigned int width = FreeImage_GetWidth(dib);
+    unsigned int height = FreeImage_GetHeight(dib);
 
-	GLenum format = FREEIMAGE_COLORORDER==FREEIMAGE_COLORORDER_BGR ? GL_BGR : GL_RGB;
+    GLenum format = FREEIMAGE_COLORORDER==FREEIMAGE_COLORORDER_BGR ? GL_BGR : GL_RGB;
 
-	RGBQUAD *pal = FreeImage_GetPalette(dib);
+    RGBQUAD *pal = FreeImage_GetPalette(dib);
 
-	if (bits!=0 && width>0 && height>0) {
-		status = true;									// Set The Status To TRUE
+    if (bits!=0 && width>0 && height>0) {
+        status = true;                                  // Set The Status To TRUE
 
-		glGenTextures(3, g_texture_id);					// Create Three Textures
+        glGenTextures(3, g_texture_id);                 // Create Three Textures
 
-		// Create Nearest Filtered Texture
-		glBindTexture(GL_TEXTURE_2D, g_texture_id[0]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, GL_UNSIGNED_BYTE, bits);
+        // Create Nearest Filtered Texture
+        glBindTexture(GL_TEXTURE_2D, g_texture_id[0]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, GL_UNSIGNED_BYTE, bits);
 
-		// Create Linear Filtered Texture
-		glBindTexture(GL_TEXTURE_2D, g_texture_id[1]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, GL_UNSIGNED_BYTE, bits);
+        // Create Linear Filtered Texture
+        glBindTexture(GL_TEXTURE_2D, g_texture_id[1]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, GL_UNSIGNED_BYTE, bits);
 
-		// Create MipMapped Texture
-		glBindTexture(GL_TEXTURE_2D, g_texture_id[2]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, width, height, format, GL_UNSIGNED_BYTE, bits);
-	}
+        // Create MipMapped Texture
+        glBindTexture(GL_TEXTURE_2D, g_texture_id[2]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, width, height, format, GL_UNSIGNED_BYTE, bits);
+    }
 
-	if (bpp != 24) FreeImage_Unload(dib);
+    if (bpp != 24) FreeImage_Unload(dib);
 
     FreeImage_Unload(tdib);
 
-	return status;										// Return The Status
+    return status;                                      // Return The Status
 }
 
 bool init() 
 {
-	if (!load_textures()) {
-		return false;
-	}
+    if (!load_textures()) {
+        return false;
+    }
 
-	glEnable(GL_TEXTURE_2D);							// Enable Texture Mapping
-	glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
-	glClearColor(g_color_background[0], g_color_background[1], g_color_background[2], g_color_background[3]);				// Black Background
-	glClearDepth(1.0f);									// Depth Buffer Setup
-	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
-	glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
+    glEnable(GL_TEXTURE_2D);                            // Enable Texture Mapping
+    glShadeModel(GL_SMOOTH);                            // Enable Smooth Shading
+    glClearColor(g_color_background[0], g_color_background[1], g_color_background[2], g_color_background[3]);               // Black Background
+    glClearDepth(1.0f);                                 // Depth Buffer Setup
+    glEnable(GL_DEPTH_TEST);                            // Enables Depth Testing
+    glDepthFunc(GL_LEQUAL);                             // The Type Of Depth Testing To Do
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Really Nice Perspective Calculations
 
-	glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION,  1.0f);
-	glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION,    0.0f);
-	glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.0f);
+    glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION,  1.0f);
+    glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION,    0.0f);
+    glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.0f);
 
-	//glLightfv(GL_LIGHT1, GL_AMBIENT, g_light_ambient);		// Setup The Ambient Light
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, g_light_diffuse);		// Setup The Diffuse Light
-	glLightfv(GL_LIGHT1, GL_SPECULAR, g_light_diffuse);
-	glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 1.0f);
-	glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 30.0f);
-	glLightfv(GL_LIGHT1, GL_POSITION, g_light_position);	// Position The Light
-	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, g_light_direction);
-	glEnable(GL_LIGHT1);								// Enable Light One
+    //glLightfv(GL_LIGHT1, GL_AMBIENT, g_light_ambient);        // Setup The Ambient Light
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, g_light_diffuse);      // Setup The Diffuse Light
+    glLightfv(GL_LIGHT1, GL_SPECULAR, g_light_diffuse);
+    glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 1.0f);
+    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 30.0f);
+    glLightfv(GL_LIGHT1, GL_POSITION, g_light_position);    // Position The Light
+    glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, g_light_direction);
+    glEnable(GL_LIGHT1);                                // Enable Light One
 
-	set_material();
+    set_material();
 
-	return true;										// Initialization Went OK
+    return true;                                        // Initialization Went OK
 }
 
 void resize(int width, int height)
 {
-	if (height==0)										// Prevent A Divide By Zero By
-	{
-		height=1;										// Making Height Equal One
-	}
+    if (height==0)                                      // Prevent A Divide By Zero By
+    {
+        height=1;                                       // Making Height Equal One
+    }
 
-	glViewport(0, 0, width, height);						// Reset The Current Viewport
+    glViewport(0, 0, width, height);                        // Reset The Current Viewport
 
-	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-	glLoadIdentity();									// Reset The Projection Matrix
+    glMatrixMode(GL_PROJECTION);                        // Select The Projection Matrix
+    glLoadIdentity();                                   // Reset The Projection Matrix
 
-	// Calculate The Aspect Ratio Of The Window
-	gluPerspective(45.0f, (float)width/(float)height, 0.1f, 100.0f);
-	//glOrtho(-2.0f, 2.0f, -2.0f, 2.0f, 0.1f, 100.0f);
+    // Calculate The Aspect Ratio Of The Window
+    gluPerspective(45.0f, (float)width/(float)height, 0.1f, 100.0f);
+    //glOrtho(-2.0f, 2.0f, -2.0f, 2.0f, 0.1f, 100.0f);
 
-	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-	glLoadIdentity();									// Reset The Modelview Matrix
+    glMatrixMode(GL_MODELVIEW);                         // Select The Modelview Matrix
+    glLoadIdentity();                                   // Reset The Modelview Matrix
 }
 
 void draw_vertices()
 {
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_LIGHTING);
-	glPointSize(3.5f);
-	glColor4fv(g_color_foreground);
-	glBegin(GL_POINTS);
-		glVertex3fv(g_cube_v[0]);
-		glVertex3fv(g_cube_v[1]);
-		glVertex3fv(g_cube_v[2]);
-		glVertex3fv(g_cube_v[3]);
-		glVertex3fv(g_cube_v[4]);
-		glVertex3fv(g_cube_v[5]);
-		glVertex3fv(g_cube_v[6]);
-		glVertex3fv(g_cube_v[7]);
-	glEnd();
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
+    glPointSize(3.5f);
+    glColor4fv(g_color_foreground);
+    glBegin(GL_POINTS);
+        glVertex3fv(g_cube_v[0]);
+        glVertex3fv(g_cube_v[1]);
+        glVertex3fv(g_cube_v[2]);
+        glVertex3fv(g_cube_v[3]);
+        glVertex3fv(g_cube_v[4]);
+        glVertex3fv(g_cube_v[5]);
+        glVertex3fv(g_cube_v[6]);
+        glVertex3fv(g_cube_v[7]);
+    glEnd();
 }
 
 void draw_wire_frame()
 {
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_LIGHTING);
-	glColor4fv(g_color_foreground);
-	glBegin(GL_LINES);
-		glVertex3fv(g_cube_v[0]);
-		glVertex3fv(g_cube_v[1]);
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
+    glColor4fv(g_color_foreground);
+    glBegin(GL_LINES);
+        glVertex3fv(g_cube_v[0]);
+        glVertex3fv(g_cube_v[1]);
 
-		glVertex3fv(g_cube_v[1]);
-		glVertex3fv(g_cube_v[2]);
+        glVertex3fv(g_cube_v[1]);
+        glVertex3fv(g_cube_v[2]);
 
-		glVertex3fv(g_cube_v[2]);
-		glVertex3fv(g_cube_v[3]);
+        glVertex3fv(g_cube_v[2]);
+        glVertex3fv(g_cube_v[3]);
 
-		glVertex3fv(g_cube_v[3]);
-		glVertex3fv(g_cube_v[0]);
+        glVertex3fv(g_cube_v[3]);
+        glVertex3fv(g_cube_v[0]);
 
-		glVertex3fv(g_cube_v[4]);
-		glVertex3fv(g_cube_v[5]);
+        glVertex3fv(g_cube_v[4]);
+        glVertex3fv(g_cube_v[5]);
 
-		glVertex3fv(g_cube_v[5]);
-		glVertex3fv(g_cube_v[6]);
+        glVertex3fv(g_cube_v[5]);
+        glVertex3fv(g_cube_v[6]);
 
-		glVertex3fv(g_cube_v[6]);
-		glVertex3fv(g_cube_v[7]);
+        glVertex3fv(g_cube_v[6]);
+        glVertex3fv(g_cube_v[7]);
 
-		glVertex3fv(g_cube_v[7]);
-		glVertex3fv(g_cube_v[4]);
+        glVertex3fv(g_cube_v[7]);
+        glVertex3fv(g_cube_v[4]);
 
-		glVertex3fv(g_cube_v[0]);
-		glVertex3fv(g_cube_v[4]);
+        glVertex3fv(g_cube_v[0]);
+        glVertex3fv(g_cube_v[4]);
 
-		glVertex3fv(g_cube_v[1]);
-		glVertex3fv(g_cube_v[7]);
+        glVertex3fv(g_cube_v[1]);
+        glVertex3fv(g_cube_v[7]);
 
-		glVertex3fv(g_cube_v[2]);
-		glVertex3fv(g_cube_v[6]);
+        glVertex3fv(g_cube_v[2]);
+        glVertex3fv(g_cube_v[6]);
 
-		glVertex3fv(g_cube_v[3]);
-		glVertex3fv(g_cube_v[5]);
-	glEnd();
+        glVertex3fv(g_cube_v[3]);
+        glVertex3fv(g_cube_v[5]);
+    glEnd();
 }
 
 void draw_triangles()
 {
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_LIGHTING);
-	glColor4fv(g_color_foreground);
-	glBegin(GL_LINES);
-		glVertex3fv(g_cube_v[0]);
-		glVertex3fv(g_cube_v[1]);
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
+    glColor4fv(g_color_foreground);
+    glBegin(GL_LINES);
+        glVertex3fv(g_cube_v[0]);
+        glVertex3fv(g_cube_v[1]);
 
-		glVertex3fv(g_cube_v[1]);
-		glVertex3fv(g_cube_v[2]);
+        glVertex3fv(g_cube_v[1]);
+        glVertex3fv(g_cube_v[2]);
 
-		glVertex3fv(g_cube_v[2]);
-		glVertex3fv(g_cube_v[3]);
+        glVertex3fv(g_cube_v[2]);
+        glVertex3fv(g_cube_v[3]);
 
-		glVertex3fv(g_cube_v[3]);
-		glVertex3fv(g_cube_v[0]);
+        glVertex3fv(g_cube_v[3]);
+        glVertex3fv(g_cube_v[0]);
 
-		glVertex3fv(g_cube_v[4]);
-		glVertex3fv(g_cube_v[5]);
+        glVertex3fv(g_cube_v[4]);
+        glVertex3fv(g_cube_v[5]);
 
-		glVertex3fv(g_cube_v[5]);
-		glVertex3fv(g_cube_v[6]);
+        glVertex3fv(g_cube_v[5]);
+        glVertex3fv(g_cube_v[6]);
 
-		glVertex3fv(g_cube_v[6]);
-		glVertex3fv(g_cube_v[7]);
+        glVertex3fv(g_cube_v[6]);
+        glVertex3fv(g_cube_v[7]);
 
-		glVertex3fv(g_cube_v[7]);
-		glVertex3fv(g_cube_v[4]);
+        glVertex3fv(g_cube_v[7]);
+        glVertex3fv(g_cube_v[4]);
 
-		glVertex3fv(g_cube_v[0]);
-		glVertex3fv(g_cube_v[4]);
+        glVertex3fv(g_cube_v[0]);
+        glVertex3fv(g_cube_v[4]);
 
-		glVertex3fv(g_cube_v[1]);
-		glVertex3fv(g_cube_v[7]);
+        glVertex3fv(g_cube_v[1]);
+        glVertex3fv(g_cube_v[7]);
 
-		glVertex3fv(g_cube_v[2]);
-		glVertex3fv(g_cube_v[6]);
+        glVertex3fv(g_cube_v[2]);
+        glVertex3fv(g_cube_v[6]);
 
-		glVertex3fv(g_cube_v[3]);
-		glVertex3fv(g_cube_v[5]);
+        glVertex3fv(g_cube_v[3]);
+        glVertex3fv(g_cube_v[5]);
 
-		glVertex3fv(g_cube_v[0]);
-		glVertex3fv(g_cube_v[2]);
+        glVertex3fv(g_cube_v[0]);
+        glVertex3fv(g_cube_v[2]);
 
-		glVertex3fv(g_cube_v[2]);
-		glVertex3fv(g_cube_v[7]);
+        glVertex3fv(g_cube_v[2]);
+        glVertex3fv(g_cube_v[7]);
 
-		glVertex3fv(g_cube_v[7]);
-		glVertex3fv(g_cube_v[5]);
+        glVertex3fv(g_cube_v[7]);
+        glVertex3fv(g_cube_v[5]);
 
-		glVertex3fv(g_cube_v[5]);
-		glVertex3fv(g_cube_v[0]);
+        glVertex3fv(g_cube_v[5]);
+        glVertex3fv(g_cube_v[0]);
 
-		glVertex3fv(g_cube_v[0]);
-		glVertex3fv(g_cube_v[7]);
+        glVertex3fv(g_cube_v[0]);
+        glVertex3fv(g_cube_v[7]);
 
-		glVertex3fv(g_cube_v[2]);
-		glVertex3fv(g_cube_v[5]);
-	glEnd();
+        glVertex3fv(g_cube_v[2]);
+        glVertex3fv(g_cube_v[5]);
+    glEnd();
 }
 
 void draw_faces()
 {
-	g_material_diffuse[0] = 137.0f/255.0f;
-	g_material_diffuse[1] = 85.0f/255.0f;
-	g_material_diffuse[2] = 40.0f/255.0f;
-	set_material();
-	glColor4fv(g_material_diffuse);
-	glDisable(GL_TEXTURE_2D);							// Enable Texture Mapping
-	glBegin(GL_QUADS);
-		// Front Face
-		glNormal3f( 0.0f, 0.0f, 1.0f);
-		glVertex3fv(g_cube_v[0]);
-		glVertex3fv(g_cube_v[1]);
-		glVertex3fv(g_cube_v[2]);
-		glVertex3fv(g_cube_v[3]);
+    g_material_diffuse[0] = 137.0f/255.0f;
+    g_material_diffuse[1] = 85.0f/255.0f;
+    g_material_diffuse[2] = 40.0f/255.0f;
+    set_material();
+    glColor4fv(g_material_diffuse);
+    glDisable(GL_TEXTURE_2D);                           // Enable Texture Mapping
+    glBegin(GL_QUADS);
+        // Front Face
+        glNormal3f( 0.0f, 0.0f, 1.0f);
+        glVertex3fv(g_cube_v[0]);
+        glVertex3fv(g_cube_v[1]);
+        glVertex3fv(g_cube_v[2]);
+        glVertex3fv(g_cube_v[3]);
 
-		// Back Face
-		glNormal3f( 0.0f, 0.0f,-1.0f);
-		glVertex3fv(g_cube_v[4]);
-		glVertex3fv(g_cube_v[5]);
-		glVertex3fv(g_cube_v[6]);
-		glVertex3fv(g_cube_v[7]);
+        // Back Face
+        glNormal3f( 0.0f, 0.0f,-1.0f);
+        glVertex3fv(g_cube_v[4]);
+        glVertex3fv(g_cube_v[5]);
+        glVertex3fv(g_cube_v[6]);
+        glVertex3fv(g_cube_v[7]);
 
-		// Top Face
-		glNormal3f( 0.0f, 1.0f, 0.0f);
-		glVertex3fv(g_cube_v[5]);
-		glVertex3fv(g_cube_v[3]);
-		glVertex3fv(g_cube_v[2]);
-		glVertex3fv(g_cube_v[6]);
+        // Top Face
+        glNormal3f( 0.0f, 1.0f, 0.0f);
+        glVertex3fv(g_cube_v[5]);
+        glVertex3fv(g_cube_v[3]);
+        glVertex3fv(g_cube_v[2]);
+        glVertex3fv(g_cube_v[6]);
 
-		// Bottom Face
-		glNormal3f( 0.0f,-1.0f, 0.0f);
-		glVertex3fv(g_cube_v[4]);
-		glVertex3fv(g_cube_v[7]);
-		glVertex3fv(g_cube_v[1]);
-		glVertex3fv(g_cube_v[0]);
+        // Bottom Face
+        glNormal3f( 0.0f,-1.0f, 0.0f);
+        glVertex3fv(g_cube_v[4]);
+        glVertex3fv(g_cube_v[7]);
+        glVertex3fv(g_cube_v[1]);
+        glVertex3fv(g_cube_v[0]);
 
-		// Right face
-		glNormal3f( 1.0f, 0.0f, 0.0f);
-		glVertex3fv(g_cube_v[7]);
-		glVertex3fv(g_cube_v[6]);
-		glVertex3fv(g_cube_v[2]);
-		glVertex3fv(g_cube_v[1]);
+        // Right face
+        glNormal3f( 1.0f, 0.0f, 0.0f);
+        glVertex3fv(g_cube_v[7]);
+        glVertex3fv(g_cube_v[6]);
+        glVertex3fv(g_cube_v[2]);
+        glVertex3fv(g_cube_v[1]);
 
-		// Left Face
-		glNormal3f(-1.0f, 0.0f, 0.0f);
-		glVertex3fv(g_cube_v[4]);
-		glVertex3fv(g_cube_v[0]);
-		glVertex3fv(g_cube_v[3]);
-		glVertex3fv(g_cube_v[5]);
-	glEnd();
+        // Left Face
+        glNormal3f(-1.0f, 0.0f, 0.0f);
+        glVertex3fv(g_cube_v[4]);
+        glVertex3fv(g_cube_v[0]);
+        glVertex3fv(g_cube_v[3]);
+        glVertex3fv(g_cube_v[5]);
+    glEnd();
 }
 
 
 
 void draw_full()
 {
-	g_material_diffuse[0] = 1.0f;
-	g_material_diffuse[1] = 1.0f;
-	g_material_diffuse[2] = 1.0f;
-	set_material();
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    g_material_diffuse[0] = 1.0f;
+    g_material_diffuse[1] = 1.0f;
+    g_material_diffuse[2] = 1.0f;
+    set_material();
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	glBindTexture(GL_TEXTURE_2D, g_texture_id[g_filter]);
+    glBindTexture(GL_TEXTURE_2D, g_texture_id[g_filter]);
 
-	glEnable(GL_TEXTURE_2D);
-	glBegin(GL_QUADS);
-		// Front Face
-		glNormal3f( 0.0f, 0.0f, 1.0f);
-		glTexCoord2f(0.0f, 0.0f); glVertex3fv(g_cube_v[0]);
-		glTexCoord2f(1.0f, 0.0f); glVertex3fv(g_cube_v[1]);
-		glTexCoord2f(1.0f, 1.0f); glVertex3fv(g_cube_v[2]);
-		glTexCoord2f(0.0f, 1.0f); glVertex3fv(g_cube_v[3]);
-		// Back Face
-		glNormal3f( 0.0f, 0.0f,-1.0f);
-		glTexCoord2f(1.0f, 0.0f); glVertex3fv(g_cube_v[4]);
-		glTexCoord2f(1.0f, 1.0f); glVertex3fv(g_cube_v[5]);
-		glTexCoord2f(0.0f, 1.0f); glVertex3fv(g_cube_v[6]);
-		glTexCoord2f(0.0f, 0.0f); glVertex3fv(g_cube_v[7]);
-		// Top Face
-		glNormal3f( 0.0f, 1.0f, 0.0f);
-		glTexCoord2f(0.0f, 1.0f); glVertex3fv(g_cube_v[5]);
-		glTexCoord2f(0.0f, 0.0f); glVertex3fv(g_cube_v[3]);
-		glTexCoord2f(1.0f, 0.0f); glVertex3fv(g_cube_v[2]);
-		glTexCoord2f(1.0f, 1.0f); glVertex3fv(g_cube_v[6]);
-		// Bottom Face
-		glNormal3f( 0.0f,-1.0f, 0.0f);
-		glTexCoord2f(1.0f, 1.0f); glVertex3fv(g_cube_v[4]);
-		glTexCoord2f(0.0f, 1.0f); glVertex3fv(g_cube_v[7]);
-		glTexCoord2f(0.0f, 0.0f); glVertex3fv(g_cube_v[1]);
-		glTexCoord2f(1.0f, 0.0f); glVertex3fv(g_cube_v[0]);
-		// Right face
-		glNormal3f( 1.0f, 0.0f, 0.0f);
-		glTexCoord2f(1.0f, 0.0f); glVertex3fv(g_cube_v[7]);
-		glTexCoord2f(1.0f, 1.0f); glVertex3fv(g_cube_v[6]);
-		glTexCoord2f(0.0f, 1.0f); glVertex3fv(g_cube_v[2]);
-		glTexCoord2f(0.0f, 0.0f); glVertex3fv(g_cube_v[1]);
-		// Left Face
-		glNormal3f(-1.0f, 0.0f, 0.0f);
-		glTexCoord2f(0.0f, 0.0f); glVertex3fv(g_cube_v[4]);
-		glTexCoord2f(1.0f, 0.0f); glVertex3fv(g_cube_v[0]);
-		glTexCoord2f(1.0f, 1.0f); glVertex3fv(g_cube_v[3]);
-		glTexCoord2f(0.0f, 1.0f); glVertex3fv(g_cube_v[5]);
-	glEnd();
+    glEnable(GL_TEXTURE_2D);
+    glBegin(GL_QUADS);
+        // Front Face
+        glNormal3f( 0.0f, 0.0f, 1.0f);
+        glTexCoord2f(0.0f, 0.0f); glVertex3fv(g_cube_v[0]);
+        glTexCoord2f(1.0f, 0.0f); glVertex3fv(g_cube_v[1]);
+        glTexCoord2f(1.0f, 1.0f); glVertex3fv(g_cube_v[2]);
+        glTexCoord2f(0.0f, 1.0f); glVertex3fv(g_cube_v[3]);
+        // Back Face
+        glNormal3f( 0.0f, 0.0f,-1.0f);
+        glTexCoord2f(1.0f, 0.0f); glVertex3fv(g_cube_v[4]);
+        glTexCoord2f(1.0f, 1.0f); glVertex3fv(g_cube_v[5]);
+        glTexCoord2f(0.0f, 1.0f); glVertex3fv(g_cube_v[6]);
+        glTexCoord2f(0.0f, 0.0f); glVertex3fv(g_cube_v[7]);
+        // Top Face
+        glNormal3f( 0.0f, 1.0f, 0.0f);
+        glTexCoord2f(0.0f, 1.0f); glVertex3fv(g_cube_v[5]);
+        glTexCoord2f(0.0f, 0.0f); glVertex3fv(g_cube_v[3]);
+        glTexCoord2f(1.0f, 0.0f); glVertex3fv(g_cube_v[2]);
+        glTexCoord2f(1.0f, 1.0f); glVertex3fv(g_cube_v[6]);
+        // Bottom Face
+        glNormal3f( 0.0f,-1.0f, 0.0f);
+        glTexCoord2f(1.0f, 1.0f); glVertex3fv(g_cube_v[4]);
+        glTexCoord2f(0.0f, 1.0f); glVertex3fv(g_cube_v[7]);
+        glTexCoord2f(0.0f, 0.0f); glVertex3fv(g_cube_v[1]);
+        glTexCoord2f(1.0f, 0.0f); glVertex3fv(g_cube_v[0]);
+        // Right face
+        glNormal3f( 1.0f, 0.0f, 0.0f);
+        glTexCoord2f(1.0f, 0.0f); glVertex3fv(g_cube_v[7]);
+        glTexCoord2f(1.0f, 1.0f); glVertex3fv(g_cube_v[6]);
+        glTexCoord2f(0.0f, 1.0f); glVertex3fv(g_cube_v[2]);
+        glTexCoord2f(0.0f, 0.0f); glVertex3fv(g_cube_v[1]);
+        // Left Face
+        glNormal3f(-1.0f, 0.0f, 0.0f);
+        glTexCoord2f(0.0f, 0.0f); glVertex3fv(g_cube_v[4]);
+        glTexCoord2f(1.0f, 0.0f); glVertex3fv(g_cube_v[0]);
+        glTexCoord2f(1.0f, 1.0f); glVertex3fv(g_cube_v[3]);
+        glTexCoord2f(0.0f, 1.0f); glVertex3fv(g_cube_v[5]);
+    glEnd();
 }
 
 void display()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear The Screen And The Depth Buffer
-	//glLoadIdentity();									// Reset The View
-	glPushMatrix();
-	glTranslatef(0.0f, 0.0f, g_z);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
+    //glLoadIdentity();                                 // Reset The View
+    glPushMatrix();
+    glTranslatef(0.0f, 0.0f, g_z);
 
-	glRotatef(g_xrot, 1.0f, 0.0f, 0.0f);
-	glRotatef(g_yrot, 0.0f, 1.0f, 0.0f);
+    glRotatef(g_xrot, 1.0f, 0.0f, 0.0f);
+    glRotatef(g_yrot, 0.0f, 1.0f, 0.0f);
 
-	if (g_light) glEnable(GL_LIGHTING);
-	else glDisable(GL_LIGHTING);
+    if (g_light) glEnable(GL_LIGHTING);
+    else glDisable(GL_LIGHTING);
 
-	switch (g_step)
-	{
-	case 1:
-		draw_vertices();
-		break;
+    switch (g_step)
+    {
+    case 1:
+        draw_vertices();
+        break;
 
-	case 2:
-		draw_wire_frame();
-		break;
-		
-	case 3:
-		draw_triangles();
-		break;
+    case 2:
+        draw_wire_frame();
+        break;
+        
+    case 3:
+        draw_triangles();
+        break;
 
-	case 4:
-		draw_faces();
-		break;
+    case 4:
+        draw_faces();
+        break;
 
-	case 5:
-		draw_full();
-		break;
-	}
+    case 5:
+        draw_full();
+        break;
+    }
 
-	glPopMatrix();
+    glPopMatrix();
 
-	g_xrot += g_xspeed;
-	g_yrot += g_yspeed;
+    g_xrot += g_xspeed;
+    g_yrot += g_yspeed;
 
-	glutSwapBuffers();
+    glutSwapBuffers();
 }
 
 void keyboard(unsigned char key, int x, int y)
 {
-	switch (key)
-	{
-	case 27:
-		exit(0);
-		break;
+    switch (key)
+    {
+    case 27:
+        exit(0);
+        break;
 
-	case 'f':
-		g_fp = true;
-		g_filter = (g_filter+1) % MAX_TEXTURES;
-		break;
+    case 'f':
+        g_fp = true;
+        g_filter = (g_filter+1) % MAX_TEXTURES;
+        break;
 
-	case 'l':
-		g_lp = true;
-		g_light = !g_light;
-		break;
+    case 'l':
+        g_lp = true;
+        g_light = !g_light;
+        break;
 
-	case 'r':
-		g_xrot = 30.0f;
-		g_yrot = 30.0f;
-		g_xspeed = 1.0f;
-		g_yspeed = 1.0f;
-		break;
+    case 'r':
+        g_xrot = 30.0f;
+        g_yrot = 30.0f;
+        g_xspeed = 1.0f;
+        g_yspeed = 1.0f;
+        break;
 
-	case 's':
-		g_xrot = 30.0f;
-		g_yrot = 30.0f;
-		g_xspeed = 0.0f;
-		g_yspeed = 0.0f;
-		g_light = false;
-		break;
+    case 's':
+        g_xrot = 30.0f;
+        g_yrot = 30.0f;
+        g_xspeed = 0.0f;
+        g_yspeed = 0.0f;
+        g_light = false;
+        break;
 
     case 'o':
         {
@@ -622,59 +622,59 @@ void keyboard(unsigned char key, int x, int y)
 
         }
 
-	case '0':
-	case '1':
-	case '2':
-	case '3':
-	case '4':
-	case '5':
-		g_step = key - '0';
-		break;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+        g_step = key - '0';
+        break;
 
-	default:
-		break;
-	}
+    default:
+        break;
+    }
 }
 
 void special_keys(int key, int x, int y)
 {
-	switch (key)
-	{
-	case GLUT_KEY_UP:
-		g_xspeed -= SPEED_STEP;
-		break;
+    switch (key)
+    {
+    case GLUT_KEY_UP:
+        g_xspeed -= SPEED_STEP;
+        break;
 
-	case GLUT_KEY_DOWN:
-		g_xspeed += SPEED_STEP;
-		break;
+    case GLUT_KEY_DOWN:
+        g_xspeed += SPEED_STEP;
+        break;
 
-	case GLUT_KEY_LEFT:
-		g_yspeed -= SPEED_STEP;
-		break;
+    case GLUT_KEY_LEFT:
+        g_yspeed -= SPEED_STEP;
+        break;
 
-	case GLUT_KEY_RIGHT:
-		g_yspeed += SPEED_STEP;
-		break;
+    case GLUT_KEY_RIGHT:
+        g_yspeed += SPEED_STEP;
+        break;
 
-	case GLUT_KEY_PAGE_UP:
-		g_z -= Z_STEP;
-		break;
+    case GLUT_KEY_PAGE_UP:
+        g_z -= Z_STEP;
+        break;
 
-	case GLUT_KEY_PAGE_DOWN:
-		g_z += Z_STEP;
-		break;
+    case GLUT_KEY_PAGE_DOWN:
+        g_z += Z_STEP;
+        break;
 
-	case GLUT_KEY_F1:
-		g_fullscreen = !g_fullscreen;
-		if (g_fullscreen)
-		{
-			g_window_width = glutGet(GLUT_WINDOW_WIDTH);
-			g_window_height = glutGet(GLUT_WINDOW_HEIGHT);
-			glutFullScreen();
-		}
-		else glutReshapeWindow(g_window_width, g_window_height);
-		break;
-	}
+    case GLUT_KEY_F1:
+        g_fullscreen = !g_fullscreen;
+        if (g_fullscreen)
+        {
+            g_window_width = glutGet(GLUT_WINDOW_WIDTH);
+            g_window_height = glutGet(GLUT_WINDOW_HEIGHT);
+            glutFullScreen();
+        }
+        else glutReshapeWindow(g_window_width, g_window_height);
+        break;
+    }
 }
 
 

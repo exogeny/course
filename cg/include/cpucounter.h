@@ -34,7 +34,7 @@ class CPUCounter
 public:
     CPUCounter() : counts(0) {}
 
-	void CounterStart()
+    void CounterStart()
     {
 #ifdef WIN32
         LARGE_INTEGER li;
@@ -45,7 +45,7 @@ public:
 #endif
     }
 
-	double GetCounts()
+    double GetCounts()
     {
 #ifdef WIN32
         LARGE_INTEGER li;
@@ -56,7 +56,7 @@ public:
 #endif
     }
 
-	double GetFrequence()
+    double GetFrequence()
     {
 #ifdef WIN32
         LARGE_INTEGER li;
@@ -68,7 +68,7 @@ public:
     }
 
 protected:
-	double counts;
+    double counts;
 
 };
 

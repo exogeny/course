@@ -243,20 +243,20 @@ bool init()
 {
     glEnable(GL_NORMALIZE);
     //glEnable(GL_AUTO_NORMAL);
-    //glEnable(GL_TEXTURE_2D);							// Enable Texture Mapping
-    glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);				// Black Background
-    glClearDepth(1.0f);									// Depth Buffer Setup
-    glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
-    glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
+    //glEnable(GL_TEXTURE_2D);                          // Enable Texture Mapping
+    glShadeModel(GL_SMOOTH);                            // Enable Smooth Shading
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);               // Black Background
+    glClearDepth(1.0f);                                 // Depth Buffer Setup
+    glEnable(GL_DEPTH_TEST);                            // Enables Depth Testing
+    glDepthFunc(GL_LEQUAL);                             // The Type Of Depth Testing To Do
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Really Nice Perspective Calculations
 
-    glLightfv(GL_LIGHT0, GL_AMBIENT, g_light_ambient);		// Setup The Ambient Light
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, g_light_diffuse);		// Setup The Diffuse Light
+    glLightfv(GL_LIGHT0, GL_AMBIENT, g_light_ambient);      // Setup The Ambient Light
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, g_light_diffuse);      // Setup The Diffuse Light
     glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 1.0f);
     glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 60.0f);
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-    glEnable(GL_LIGHT0);								// Enable Light One
+    glEnable(GL_LIGHT0);                                // Enable Light One
 
     g_rotm.IdentityMatrix();
 
@@ -692,16 +692,16 @@ void draw_walls()
     glVertex3v(g_cube_v[g_cube_f[face][3]]);
 
     //for (face=0; face<5; ++face) {
-    //	if (g_cube_f[face][4]>0) {
-    //		g_material_diffuse[3] = 0.6f*(float)(g_cube_f[face][4])/(float)(SHOW_TIMES);
-    //		set_material();
-    //		glNormal3fv(g_cube_fn[face]);
-    //		glVertex3fv(g_cube_v[g_cube_f[face][0]]);
-    //		glVertex3fv(g_cube_v[g_cube_f[face][1]]);
-    //		glVertex3fv(g_cube_v[g_cube_f[face][2]]);
-    //		glVertex3fv(g_cube_v[g_cube_f[face][3]]);
-    //		g_cube_f[face][4] --;
-    //	}
+    //  if (g_cube_f[face][4]>0) {
+    //      g_material_diffuse[3] = 0.6f*(float)(g_cube_f[face][4])/(float)(SHOW_TIMES);
+    //      set_material();
+    //      glNormal3fv(g_cube_fn[face]);
+    //      glVertex3fv(g_cube_v[g_cube_f[face][0]]);
+    //      glVertex3fv(g_cube_v[g_cube_f[face][1]]);
+    //      glVertex3fv(g_cube_v[g_cube_f[face][2]]);
+    //      glVertex3fv(g_cube_v[g_cube_f[face][3]]);
+    //      g_cube_f[face][4] --;
+    //  }
     //}
     glEnd();
 
@@ -727,7 +727,7 @@ void display()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     g_cam.LookAt(0.0f, 0.0f, WALL_SIZE*sqrt(3.0)*(0.4+1/tan(DEGTORAD(g_fov*0.5))), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
-    glLightfv(GL_LIGHT0, GL_POSITION, g_light_position);	// Position The Light
+    glLightfv(GL_LIGHT0, GL_POSITION, g_light_position);    // Position The Light
     glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, g_light_direction);
     glMultMatrix(g_rotm);
     glEnable(GL_LIGHTING);

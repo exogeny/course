@@ -33,12 +33,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 struct point_type
 {
-	GLint x, y;
+    GLint x, y;
 };
 
 struct color_type
 {
-	GLdouble r, g, b;
+    GLdouble r, g, b;
 };
 
 /* constant initializations */
@@ -96,13 +96,13 @@ void step_back()
 void reset_region()
 {
     if (g_make_julia) {
-        g_xmin = -1.25;				// selected region
-        g_xmax = 1.25;					// of set to be drawn
+        g_xmin = -1.25;             // selected region
+        g_xmax = 1.25;                  // of set to be drawn
         g_ymin = -1.25;
         g_ymax = 1.25;
     } else {
-        g_xmin = -2.0;				// selected region
-        g_xmax = .5;					// of set to be drawn
+        g_xmin = -2.0;              // selected region
+        g_xmax = .5;                    // of set to be drawn
         g_ymin = -1.25;
         g_ymax = 1.25;
     }
@@ -120,14 +120,14 @@ void set_factors()
 // will draw on the entire window
 void display()
 {
-	GLdouble sqR, sqI, colorLevel;
-	GLint numOfIterations;
-	GLdouble cI, cR, zI, zR;
+    GLdouble sqR, sqI, colorLevel;
+    GLint numOfIterations;
+    GLdouble cI, cR, zI, zR;
 
-	glClear(GL_COLOR_BUFFER_BIT);
-	glFlush();
+    glClear(GL_COLOR_BUFFER_BIT);
+    glFlush();
 
-	set_factors();	// update real and imag factors for current region
+    set_factors();  // update real and imag factors for current region
 
     if (g_make_julia) {
         for (int y = 0; y < SCREEN_HEIGHT; y++) {
@@ -147,9 +147,9 @@ void display()
                     numOfIterations++;
                 } while ((sqR + sqI) <= 400 && numOfIterations < g_max_iterations);
 
-                if (numOfIterations >= g_max_iterations) { // c in set, color black			
+                if (numOfIterations >= g_max_iterations) { // c in set, color black         
                     glColor3f(0.0, 0.0, 0.0);
-                } else { // c not in set, vary color			
+                } else { // c not in set, vary color            
                     glColor4fv(g_color_table[1024-(int)((numOfIterations/(double)g_max_iterations)*1023)]);
                 }
 
@@ -178,9 +178,9 @@ void display()
                     numOfIterations++;
                 }
 
-                if (numOfIterations >= g_max_iterations) { // c in set, color black			
+                if (numOfIterations >= g_max_iterations) { // c in set, color black         
                     glColor3f(0.0, 0.0, 0.0);
-                } else { // c not in set, vary color			
+                } else { // c not in set, vary color            
                     glColor4fv(g_color_table[1024-(int)((numOfIterations/(double)g_max_iterations)*1023)]);
                 }
 
@@ -189,7 +189,7 @@ void display()
         }
     }
 
-	glFlush();
+    glFlush();
 }
 
 // used by zoom() to swap two corner points
@@ -211,48 +211,48 @@ void swap_corners(point_type c[])
 // screen factors accordingly
 void zoom(point_type corner[])
 {
-	g_is_zoomed = true;
-	capture_coords();					// store current coords for stepBack()
+    g_is_zoomed = true;
+    capture_coords();                   // store current coords for stepBack()
 
-	if (corner[0].x >= corner[1].x)		// make sure first clicked coord is
-		swap_corners(corner);			// top left corner of region and second
-										// clicked coord is bottom left corner
-	if (corner[0].y > corner[1].y)		// of region to be zoom
-	{
-		g_ymin = g_ymax - corner[0].y * g_ifactor;
-		g_ymax = g_ymax - corner[1].y * g_ifactor;
-	}
-	else
-	{
-		g_ymin = g_ymax - (corner[0].y + (corner[1].y - corner[0].y)) * g_ifactor;
-		g_ymax = g_ymax - (corner[1].y - (corner[1].y - corner[0].y)) * g_ifactor;
-	}
+    if (corner[0].x >= corner[1].x)     // make sure first clicked coord is
+        swap_corners(corner);           // top left corner of region and second
+                                        // clicked coord is bottom left corner
+    if (corner[0].y > corner[1].y)      // of region to be zoom
+    {
+        g_ymin = g_ymax - corner[0].y * g_ifactor;
+        g_ymax = g_ymax - corner[1].y * g_ifactor;
+    }
+    else
+    {
+        g_ymin = g_ymax - (corner[0].y + (corner[1].y - corner[0].y)) * g_ifactor;
+        g_ymax = g_ymax - (corner[1].y - (corner[1].y - corner[0].y)) * g_ifactor;
+    }
 
-	g_xmin = g_xmin_prev + corner[0].x * g_rfactor;
-	g_xmax = g_xmin_prev + corner[1].x * g_rfactor;
+    g_xmin = g_xmin_prev + corner[0].x * g_rfactor;
+    g_xmax = g_xmin_prev + corner[1].x * g_rfactor;
 
-	glutPostRedisplay();
+    glutPostRedisplay();
 }
 
 // mouse function that will catch two mouse left button clicks to zoom in
 // on the region represented by the clicks
 void mouse(int button, int state, int x, int y)
 {
-	static point_type corner[2];
-	static int num_corners = 0;
+    static point_type corner[2];
+    static int num_corners = 0;
 
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-	{
-		corner[num_corners].x = x;
-		corner[num_corners].y = SCREEN_HEIGHT - y;
-		num_corners++;
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    {
+        corner[num_corners].x = x;
+        corner[num_corners].y = SCREEN_HEIGHT - y;
+        num_corners++;
 
-		if (num_corners == 2)	// two corners have been clicked by user
-		{
-			zoom(corner);		// zoom to two corners
-			num_corners = 0;
-		}
-	}
+        if (num_corners == 2)   // two corners have been clicked by user
+        {
+            zoom(corner);       // zoom to two corners
+            num_corners = 0;
+        }
+    }
 }
 
 // if user presses 'ESC' key, will terminate program
@@ -274,7 +274,7 @@ void keyboard(unsigned char key, int x, int y)
                 g_curc = (g_curc+1)%C_NUM;
                 g_cr = g_ctable[g_curc][0];
                 g_ci = g_ctable[g_curc][1];
-				printf("c = %f + %fi\n", g_cr, g_ci);
+                printf("c = %f + %fi\n", g_cr, g_ci);
             }
             glutPostRedisplay();
             break;
@@ -284,7 +284,7 @@ void keyboard(unsigned char key, int x, int y)
                 g_curc = (g_curc+C_NUM-1)%C_NUM;
                 g_cr = g_ctable[g_curc][0];
                 g_ci = g_ctable[g_curc][1];
-				printf("c = %f + %fi\n", g_cr, g_ci);
+                printf("c = %f + %fi\n", g_cr, g_ci);
             }
             glutPostRedisplay();
             break;
@@ -302,8 +302,8 @@ void keyboard(unsigned char key, int x, int y)
 
 int main(int argc, char** argv)
 {
-    g_max_iterations = 80;		// max # of iterations to determine if in set
-    g_is_zoomed = false;			// flag denoting whether user has zoomed
+    g_max_iterations = 80;      // max # of iterations to determine if in set
+    g_is_zoomed = false;            // flag denoting whether user has zoomed
 
     g_cr = g_ctable[g_curc][0];
     g_ci = g_ctable[g_curc][1];
@@ -347,12 +347,12 @@ int main(int argc, char** argv)
     glutCreateWindow("Mandelbrot Set Implementation");
     glMatrixMode(GL_PROJECTION);
 
-    gluOrtho2D(0.0, SCREEN_WIDTH, 0.0, SCREEN_HEIGHT);	// assuming 1024/768 resolution
+    gluOrtho2D(0.0, SCREEN_WIDTH, 0.0, SCREEN_HEIGHT);  // assuming 1024/768 resolution
     glClearColor(0.0, 0.0, 0.0, 0.0);
 
-    glutKeyboardFunc(keyboard);		// register keyboard function
-    glutDisplayFunc(display);		// register display function
-    glutMouseFunc(mouse);				// registry mouse function
+    glutKeyboardFunc(keyboard);     // register keyboard function
+    glutDisplayFunc(display);       // register display function
+    glutMouseFunc(mouse);               // registry mouse function
     glutMainLoop();
 
     return 0;

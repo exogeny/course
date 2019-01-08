@@ -46,7 +46,7 @@ float g_cloud_angle = 0.0f;
 GLuint g_planet_texture_id;
 GLuint g_cloud_texture_id;
 
-GLfloat g_z=4.0f;		// Depth Into The Screen
+GLfloat g_z=4.0f;       // Depth Into The Screen
 GLfloat const Z_STEP = 0.05f;
 
 GLclampf g_color_background[] = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -86,7 +86,7 @@ FIBITMAP* load_image(char const *filename, int flag = 0)
     if (fif == FIF_UNKNOWN) fif = FreeImage_GetFIFFromFilename(filename);
     if (fif == FIF_UNKNOWN) return false;
 
-    return FreeImage_Load(fif, filename, flag);	
+    return FreeImage_Load(fif, filename, flag); 
 }
 
 GLuint load_texture(char const *imgfile)
@@ -113,8 +113,8 @@ GLuint load_texture(char const *imgfile)
 
     GLuint tex_id = 0;
     if (bits!=0 && width>0 && height>0) {
-        //status = true;									// Set The Status To TRUE
-        glGenTextures(1, &tex_id);					// Create Three Textures
+        //status = true;                                    // Set The Status To TRUE
+        glGenTextures(1, &tex_id);                  // Create Three Textures
 
         // Create Nearest Filtered Texture
         //glBindTexture(GL_TEXTURE_2D, g_texture_id);
@@ -139,7 +139,7 @@ GLuint load_texture(char const *imgfile)
 
     FreeImage_Unload(tdib);
 
-    return tex_id;										// Return The Status
+    return tex_id;                                      // Return The Status
 }
 
 bool load_textures()
@@ -159,26 +159,26 @@ bool init()
         return false;
     }
 
-    glEnable(GL_TEXTURE_2D);							// Enable Texture Mapping
-    glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
-    glClearColor(g_color_background[0], g_color_background[1], g_color_background[2], g_color_background[3]);				// Black Background
-    glClearDepth(1.0f);									// Depth Buffer Setup
-    glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
-    glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
+    glEnable(GL_TEXTURE_2D);                            // Enable Texture Mapping
+    glShadeModel(GL_SMOOTH);                            // Enable Smooth Shading
+    glClearColor(g_color_background[0], g_color_background[1], g_color_background[2], g_color_background[3]);               // Black Background
+    glClearDepth(1.0f);                                 // Depth Buffer Setup
+    glEnable(GL_DEPTH_TEST);                            // Enables Depth Testing
+    glDepthFunc(GL_LEQUAL);                             // The Type Of Depth Testing To Do
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Really Nice Perspective Calculations
 
     glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION,  1.0f);
     glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION,    0.0f);
     glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.0f);
 
-    //glLightfv(GL_LIGHT1, GL_AMBIENT, g_light_ambient);		// Setup The Ambient Light
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, g_light_diffuse);		// Setup The Diffuse Light
+    //glLightfv(GL_LIGHT1, GL_AMBIENT, g_light_ambient);        // Setup The Ambient Light
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, g_light_diffuse);      // Setup The Diffuse Light
     glLightfv(GL_LIGHT1, GL_SPECULAR, g_light_diffuse);
     glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 1.0f);
     glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 30.0f);
-    glLightfv(GL_LIGHT1, GL_POSITION, g_light_position);	// Position The Light
+    glLightfv(GL_LIGHT1, GL_POSITION, g_light_position);    // Position The Light
     glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, g_light_direction);
-    glEnable(GL_LIGHT1);								// Enable Light One
+    glEnable(GL_LIGHT1);                                // Enable Light One
 
     set_material();
 
@@ -200,7 +200,7 @@ bool init()
     g_trackball.Update(dr);
     g_trackball.BuildRotMatrix(g_rotm);
 
-    return true;										// Initialization Went OK
+    return true;                                        // Initialization Went OK
 }
 
 void clear()
@@ -213,9 +213,9 @@ void clear()
 
 void resize(int width, int height)
 {
-    if (height==0)										// Prevent A Divide By Zero By
+    if (height==0)                                      // Prevent A Divide By Zero By
     {
-        height=1;										// Making Height Equal One
+        height=1;                                       // Making Height Equal One
     }
 
     glViewport(0, 0, width, height);
@@ -226,7 +226,7 @@ void resize(int width, int height)
 
 void display()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear The Screen And The Depth Buffer
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
     g_cam.LookAt(0.0f, 0.0f, g_z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
 
@@ -359,7 +359,7 @@ void mouse(int button, int state, int x, int y)
     }
 
     g_last_x = x;
-    g_last_y = y;	
+    g_last_y = y;   
 }
 
 int main(int argc, char *argv[])

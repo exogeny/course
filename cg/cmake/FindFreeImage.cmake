@@ -31,19 +31,6 @@ else (WIN32)
   endif (APPLE)
 endif (WIN32)
 
-set(FREEIMAGE_FOUND "NO")
-if(FREEIMAGE_INCLUDE_DIR)
-  if(FREEIMAGE_FreeImage_LIBRARY)
-    set(FREEIMAGE_LIBRARIES ${FREEIMAGE_FreeImage_LIBRARY})
-    set(FREEIMAGE_FOUND "YES")
-    
-    #The following deprecated settings are for backwards compatibility with CMake1.4
-    set (FREEIMAGE_LIBRARY ${FREEIMAGE_LIBRARIES})
-    set (FREEIMAGE_INCLUDE_PATH ${FREEIMAGE_INCLUDE_DIR})
-    
-  endif(FREEIMAGE_FreeImage_LIBRARY)
-endif(FREEIMAGE_INCLUDE_DIR)
-
 MARK_AS_ADVANCED(
   FREEIMAGE_INCLUDE_DIR
   FREEIMAGE_LIBRARIES)

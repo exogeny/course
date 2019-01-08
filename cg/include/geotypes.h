@@ -25,28 +25,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 template <typename T>
 struct _2d_point_type
 {
-	union
-	{
-		struct { T x, y; };
-		T coord[2];
-	};
+    union
+    {
+        struct { T x, y; };
+        T coord[2];
+    };
 };
 
 template <typename T>
 struct _3d_point_type
 {
-	union
-	{
-		struct { T x, y, z; };
-		T coord[3];
-	};
+    union
+    {
+        struct { T x, y, z; };
+        T coord[3];
+    };
 };
 
 template <typename IndexType, unsigned int indexNum>
 struct _face_type
 {
-	enum { vertNum = indexNum };
-	IndexType verts[indexNum];
+    enum { vertNum = indexNum };
+    IndexType verts[indexNum];
 };
 
 typedef _2d_point_type<float> Point2f;

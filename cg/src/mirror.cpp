@@ -43,8 +43,8 @@ struct Mirror {
                Vectorf hdlb(halfDiagLB), hdrb(halfDiagRB);
                hdlb.Normalize();
                hdrb.Normalize();
-               hdlb *= abs(hl);
-               hdrb *= abs(hl);
+               hdlb *= fabs(hl);
+               hdrb *= fabs(hl);
                hdlb[3] = 0;
                hdrb[3] = 0;
 
@@ -220,7 +220,7 @@ void mouse(int button, int state, int x, int y)
     }
 
     g_last_x = x;
-    g_last_y = y;	
+    g_last_y = y;   
 }
 
 
@@ -330,15 +330,15 @@ void display()
 
 void keyboard(unsigned char key, int x, int y)
 {
-	switch (key)
-	{
+    switch (key)
+    {
         case 27:
             exit(0);
             break;
             
         default:
             break;
-	}
+    }
 }
 
 int main(int argc, char *argv[])

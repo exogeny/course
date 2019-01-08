@@ -51,31 +51,6 @@ else (WIN32)
   endif (APPLE)
 endif (WIN32)
 
-set(GLEW_FOUND "NO")
-if(GLEW_INCLUDE_DIR)
-  if(GLEW_GLEW_LIBRARY)
-    # Is -lXi and -lXmu required on all platforms that have it?
-    # ifnot, we need some way to figure out what platform we are on.
-    set(GLEW_LIBRARIES ${GLEW_GLEW_LIBRARY})
-    set(GLEW_FOUND "YES")
-
-#The following deprecated settings are for backwards compatibility with CMake1.4
-    set (GLEW_LIBRARY ${GLEW_LIBRARIES})
-    set (GLEW_INCLUDE_PATH ${GLEW_INCLUDE_DIR})
-
-  endif(GLEW_GLEW_LIBRARY)
-endif(GLEW_INCLUDE_DIR)
-
-if(GLEW_FOUND)
-  if(NOT GLEW_FIND_QUIETLY)
-    message(STATUS "Found Glew: ${GLEW_LIBRARIES}")
-  endif(NOT GLEW_FIND_QUIETLY)
-else(GLEW_FOUND)
-  if(GLEW_FIND_REQUIRED)
-    message(FATAL_ERROR "Could not find Glew")
-  endif(GLEW_FIND_REQUIRED)
-endif(GLEW_FOUND)
-
 MARK_AS_ADVANCED(
   GLEW_INCLUDE_DIR
   GLEW_GLEW_LIBRARY

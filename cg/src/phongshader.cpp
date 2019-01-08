@@ -32,8 +32,8 @@ float g_light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
 float g_light_position[] = { -0.2f, 0.2f, -2.6f, 1.0f };
 float g_light_direction[] = { 0.0f - g_light_position[0],
                               0.0f - g_light_position[1],
-							  -5.0f - g_light_position[2],
-							  0.0f };
+                              -5.0f - g_light_position[2],
+                              0.0f };
 
 float g_material_ambient[]  = { 1.0f, 0.57f, 0.04f, 1.0f };
 float g_material_diffuse[]  = { 1.0f, 0.57f, 0.04f, 1.0f };
@@ -196,12 +196,12 @@ bool init()
     g_rotm.IdentityMatrix();
 
     set_material();
-    glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
-    glClearColor(g_color_background[0], g_color_background[1], g_color_background[2], g_color_background[3]);				// Black Background
-    glClearDepth(1.0f);									// Depth Buffer Setup
-    glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
-    glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
+    glShadeModel(GL_SMOOTH);                            // Enable Smooth Shading
+    glClearColor(g_color_background[0], g_color_background[1], g_color_background[2], g_color_background[3]);               // Black Background
+    glClearDepth(1.0f);                                 // Depth Buffer Setup
+    glEnable(GL_DEPTH_TEST);                            // Enables Depth Testing
+    glDepthFunc(GL_LEQUAL);                             // The Type Of Depth Testing To Do
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Really Nice Perspective Calculations
 
     //glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
@@ -211,15 +211,15 @@ bool init()
     glLightf(light, GL_LINEAR_ATTENUATION,    0.0f);
     glLightf(light, GL_QUADRATIC_ATTENUATION, 0.0f);
 
-    //glLightfv(light, GL_AMBIENT, g_light_ambient);		// Setup The Ambient Light
-    glLightfv(light, GL_DIFFUSE, g_light_diffuse);		// Setup The Diffuse Light
+    //glLightfv(light, GL_AMBIENT, g_light_ambient);        // Setup The Ambient Light
+    glLightfv(light, GL_DIFFUSE, g_light_diffuse);      // Setup The Diffuse Light
     glLightfv(light, GL_SPECULAR, g_light_diffuse);
     glLightf(light, GL_SPOT_EXPONENT, 26.5f);
     //glLightf(light, GL_SPOT_CUTOFF, 15.5f);
     glLightf(light, GL_SPOT_CUTOFF, 45.5f);
-    glLightfv(light, GL_POSITION, g_light_position);	// Position The Light
+    glLightfv(light, GL_POSITION, g_light_position);    // Position The Light
     glLightfv(light, GL_SPOT_DIRECTION, g_light_direction);
-    glEnable(light);								// Enable Light One
+    glEnable(light);                                // Enable Light One
 
     //glDrawBuffer(GL_FRONT_AND_BACK);
 
@@ -235,7 +235,7 @@ bool init()
 
     glEnable(GL_MULTISAMPLE);
 
-    return true;										// Initialization Went OK
+    return true;                                        // Initialization Went OK
 
 }
 
@@ -360,13 +360,13 @@ void keyboard(unsigned char key, int x, int y)
         g_refinement += 5;
         break;
 
-	case 'p':
-		glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 45.5f);
-		break;
+    case 'p':
+        glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 45.5f);
+        break;
 
-	case 'l':
-		glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 180.0f);
-		break;
+    case 'l':
+        glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 180.0f);
+        break;
 
     default:
         break;
