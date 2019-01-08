@@ -1,3 +1,24 @@
+/*
+-----------------------------------------------------------------------
+This source file is part of "cgcourse-examples"
+(Examples for Computer Graphics Course of CCCE GUCAS.)
+Copyright (C) 2011 Xue Jian (jian.xue.cn@gmail.com)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-----------------------------------------------------------------------
+*/
+
 #ifndef __trackball_h
 #define __trackball_h
 
@@ -11,116 +32,116 @@ unsigned int const RENORMCOUNT = 97;
 template <typename T> class TrackBall
 {
 public:
-    TrackBall(T const ballsize = T(0.6)) : ball_size(ballsize), count(0) {};
+	TrackBall(T const ballsize = T(0.6)) : ball_size(ballsize), count(0) {};
 
-    void Start(T x, T y)
-    {
-        last_x = x;
-        last_y = y;
+	void Start(T x, T y)
+	{
+		last_x = x;
+		last_y = y;
 
-        last_quat.Identity();
-    }
+		last_quat.Identity();
+	}
 
-    void Update(Quaternion<T> q)
-    {
-        cur_quat = q * cur_quat;
-        if (++count > RENORMCOUNT)
-        {
-            count = 0;
-            cur_quat.Normalize();
-        }
-    }
+	void Update(Quaternion<T> q)
+	{
+		cur_quat = q * cur_quat;
+		if (++count > RENORMCOUNT)
+		{
+			count = 0;
+			cur_quat.Normalize();
+		}
+	}
 
-    void Update(T x, T y)
-    {
-        Vector<T> a; /* Axis of rotation */
-        Vector<T> p1, p2, d;
-        T phi;  /* how much to rotate about axis */
-        T t;
+	void Update(T x, T y)
+	{
+		Vector<T> a; /* Axis of rotation */
+		Vector<T> p1, p2, d;
+		T phi;  /* how much to rotate about axis */
+		T t;
 
-        //  Might just be able to return here.
-        if (last_x == x && last_y == y) 
-        {
-            /* Zero rotation */
-            last_quat.Identity();
-            return;
-        }
+		//  Might just be able to return here.
+		if (last_x == x && last_y == y) 
+		{
+			/* Zero rotation */
+			last_quat.Identity();
+			return;
+		}
 
-        /*
-        * First, figure out z-coordinates for projection of P1 and P2 to
-        * deformed sphere
-        */
-        p1.ele[0] = last_x;
-        p1.ele[1] = last_y;
-        p1.ele[2] = TrackBall<T>::_projectToSphere(ball_size, last_x, last_y);
+		/*
+		* First, figure out z-coordinates for projection of P1 and P2 to
+		* deformed sphere
+		*/
+		p1.ele[0] = last_x;
+		p1.ele[1] = last_y;
+		p1.ele[2] = TrackBall<T>::_projectToSphere(ball_size, last_x, last_y);
 
-        p2.ele[0] = x;
-        p2.ele[1] = y;
-        p2.ele[2] = TrackBall<T>::_projectToSphere(ball_size, x, y);
+		p2.ele[0] = x;
+		p2.ele[1] = y;
+		p2.ele[2] = TrackBall<T>::_projectToSphere(ball_size, x, y);
 
-        /*
-        *  Now, we want the cross product of P1 and P2
-        */
-        a = p1 % p2;
+		/*
+		*  Now, we want the cross product of P1 and P2
+		*/
+		a = p1 % p2;
 
-        /*
-        *  Figure out how much to rotate around that axis.
-        */
-        d = p1 - p2;
-        t = d.Length() / (T(2.0) * ball_size);
+		/*
+		*  Figure out how much to rotate around that axis.
+		*/
+		d = p1 - p2;
+		t = d.Length() / (T(2.0) * ball_size);
 
-        /*
-        * Avoid problems with out-of-control values...
-        */
-        if (t > T(1.0)) t = T(1.0);
-        if (t < T(-1.0)) t = T(-1.0);
-        phi = T(2.0) * asin(t);
+		/*
+		* Avoid problems with out-of-control values...
+		*/
+		if (t > T(1.0)) t = T(1.0);
+		if (t < T(-1.0)) t = T(-1.0);
+		phi = T(2.0) * asin(t);
 
-        last_quat.AxisRadToQuat(a[0], a[1], a[2], phi);
+		last_quat.AxisRadToQuat(a[0], a[1], a[2], phi);
 
-        last_x = x;
-        last_y = y;
+		last_x = x;
+		last_y = y;
 
-        Update(last_quat);
-    }
+		Update(last_quat);
+	}
 
-    void BuildRotMatrix(Matrix<T> &mat)
-    {
-        cur_quat.BuildMatrix(mat);
-    }
+	void BuildRotMatrix(Matrix<T> &mat)
+	{
+		cur_quat.BuildMatrix(mat);
+	}
 
-    Quaternion<T> const& GetCurrentQuat() const { return cur_quat; }
-    Quaternion<T> const& GetUpdateQuat() const { return last_quat; }
-    //Quaternion<T>& GetCurrentQuat() { return cur_quat; }
-    //Quaternion<T>& GetUpdateQuat() { return last_quat; }
+	Quaternion<T> const& GetCurrentQuat() const { return cur_quat; }
+	Quaternion<T> const& GetUpdateQuat() const { return last_quat; }
+	//Quaternion<T>& GetCurrentQuat() { return cur_quat; }
+	//Quaternion<T>& GetUpdateQuat() { return last_quat; }
 
 
 private:
-    static T _projectToSphere(T r, T x, T y)
-    {
-        T d, z;
+	static T _projectToSphere(T r, T x, T y)
+	{
+		T d, z;
 
-        d = x*x + y*y;
-        if (d < r * r * T(0.5)) // d < r / sqrt(2) --> inside sphere
-        {
-            z = sqrt(r*r - d);
-        }
-        else // On hyperbola
-        {
-            z = T(0.5) * r * r / sqrt(d);
-        }
+		d = x*x + y*y;
+		if (d < r * r * T(0.5)) // d < r / sqrt(2) --> inside sphere
+		{
+			z = sqrt(r*r - d);
+		}
+		else // On hyperbola
+		{
+			z = T(0.5) * r * r / sqrt(d);
+		}
 
-        return z;
-    }
+		return z;
+	}
 
-    T ball_size;
-    unsigned int count;
+	T ball_size;
+	unsigned int count;
 
-    Quaternion<T> cur_quat;
-    Quaternion<T> last_quat;
+	Quaternion<T> cur_quat;
+	Quaternion<T> last_quat;
 
-    T last_x;
-    T last_y;
+	T last_x;
+	T last_y;
 };
 
 typedef TrackBall<float> TrackBallf;

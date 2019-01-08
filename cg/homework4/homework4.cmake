@@ -1,1 +1,0 @@
-include(homework4/mirror/mirror.cmake)

@@ -1,62 +1,119 @@
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.6)
+if(COMMAND CMAKE_POLICY)
+  cmake_policy(SET CMP0003 NEW)
+endif(COMMAND CMAKE_POLICY)
 
-project(cg)
+project(cg_examples)
 
-# Compiler Flags
-if(CMAKE_COMPILER_IS_GNUCXX)
-  if(DEBUG)
-    set(CMAKE_CXX_FLAGS "-g -O0 -fPIC -lstdc++ -Wall")
-    set(CMAKE_C_FLAGS "-g -O0 -fPIC -Wall")
-  else()
-    set(CMAKE_CXX_FLAGS "-g -O3 -fPIC -lstdc++ -Wall")
-    set(CMAKE_C_FLAGS "-g -O3 -fPIC -Wall")
-  endif()
-endif()
+set(CMAKE_MODULE_PATH ${cg_examples_SOURCE_DIR}/cmake ${PROJECT_SOURCE_DIR}/external)
+set(CMAKE_INSTALL_PREFIX "${cg_examples_BINARY_DIR}/dist" CACHE PATH "cg_examples install prefix" FORCE)
 
-# set the g++ version 11
-if(CMAKE_VERSION VERSION_LESS "3.1")
-  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
-  endif()
-else()
-  set(CMAKE_CXX_STANDARD 11)
-endif()
+option(USE_SYSTEM_GLUT        "use the system glut libraries"      OFF)
+option(USE_SYSTEM_GLEW        "use the system glew libraries"      OFF)
+option(USE_SYSTEM_FREE_IMAGE  "use the system FreeImage libraries" OFF)
+option(USE_SYSTEM_MITK        "use the system glut libraries"      OFF)
 
-set(cg_root_folder ${cg_SOURCE_DIR})
+if(WIN32)
+  find_package(WindowsSDK QUIET)
+  if(WINDOWSSDK_FOUND)
+    message(STATUS "WINDOWSSDK_PREFERRED_DIR = ${WINDOWSSDK_PREFERRED_DIR}")
+    message(STATUS "WINDOWSSDK_PREFERRED_FIRST_DIRS = ${WINDOWSSDK_PREFERRED_FIRST_DIRS}")
+    get_windowssdk_include_dirs(${WINDOWSSDK_PREFERRED_DIR} WINSDK_INCLUDE_DIRS)
+    get_windowssdk_library_dirs(${WINDOWSSDK_PREFERRED_DIR} WINSDK_LIBRARY_DIRS)
 
-# External dependencies
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/external)
+    message(STATUS "WINSDK_INCLUDE_DIRS = ${WINSDK_INCLUDE_DIRS}")
+    message(STATUS "WINSDK_LIBRARY_DIRS = ${WINSDK_LIBRARY_DIRS}")
+
+    if("${WINSDK_INCLUDE_DIRS}" STREQUAL "NOTFOUND")
+      message(STATUS "WINSDK_INCLUDE_DIRS is not found")
+    else()
+      find_path(freeglut_INCLUDE_DIR  NAMES GL/glut.h             PATHS ${WINSDK_INCLUDE_DIRS})
+      find_path(FREEIMAGE_INCLUDE_DIR NAMES FreeImage.h           PATHS ${WINSDK_INCLUDE_DIRS})
+      find_path(GLEW_INCLUDE_DIR      NAMES GL/glew.h             PATHS ${WINSDK_INCLUDE_DIRS})
+
+      find_library(freeglut_STATIC_LIBRARIES   NAMES glut glut32 freeglut  PATHS ${WINSDK_LIBRARY_DIRS})
+      find_library(GLEW_GLEW_LIBRARY           NAMES glew32                PATHS ${WINSDK_LIBRARY_DIRS})
+      find_library(FREEIMAGE_FreeImage_LIBRARY NAMES FreeImage    PATHS ${WINSDK_LIBRARY_DIRS})
+    endif()
+  endif(WINDOWSSDK_FOUND)
+endif(WIN32)
 
 # Location where external projects will be downloaded
 set(DOWNLOAD_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/downloads"
     CACHE PATH "Location where external projects will be downloaded.")
 mark_as_advanced(DOWNLOAD_LOCATION)
 
-# Include the external dependencies
-include(glew)
-include(glext)
-include(freeglut)
-include(freeimage)
+find_package(OpenGL    REQUIRED)
+if(USE_SYSTEM_GLUT)
+  find_package(GLUT    REQUIRED)
+else()
+  include(freeglut)
+endif()
+if(USE_SYSTEM_GLEW)
+  find_package(GLEW      QUIET)
+endif()
+if(USE_SYSTEM_FREE_IMAGE)
+  find_package(FreeImage QUIET)
+endif()
+if(USE_SYSTEM_MITK)
+  find_package(MITK      QUIET)
+endif()
 
-include_directories(${glew_INCLUDE_DIRS})
-include_directories(${freeglut_INCLUDE_DIRS})
-include_directories(${freeimage_INCLUDE_DIRS})
-include_directories(include)
+include_directories(
+  "include"
+  ${OPENGL_INCLUDE_DIR}
+  ${freeglut_INCLUDE_DIR}
+)
 
-set(cg_EXTERNAL_LIBRARIES
-    ${glew_STATIC_LIBRARIES}
-    ${freeglut_STATIC_LIBRARIES}
-    ${freeimage_STATIC_LIBRARIES})
+add_custom_target(copy_data ${CMAKE_COMMAND} -E copy_directory ${cg_examples_SOURCE_DIR}/data ${cg_examples_BINARY_DIR}/data)
 
-set(cg_EXTERNAL_DEPENDENCIES
-    glew
-    freeglut
-    freeimage)
+install(DIRECTORY data/ DESTINATION data PATTERN ".svn" EXCLUDE)
+install(DIRECTORY src/shaders/ DESTINATION shaders PATTERN ".svn" EXCLUDE)
 
-include(homework1/homework1.cmake)
-include(homework3/homework3.cmake)
-include(homework4/homework4.cmake)
+function(add_example EXAMPLE_NAME)
+  set(LIBRARIES ${freeglut_STATIC_LIBRARIES} ${OPENGL_LIBRARIES})
+  if(ARGV1)
+    set(ADDITIONAL_LIBRARYS ${ARGV})
+    list(REMOVE_AT ADDITIONAL_LIBRARYS 0)
+    list(APPEND LIBRARIES ${ADDITIONAL_LIBRARYS})
+  endif(ARGV1)
+  add_executable(${EXAMPLE_NAME} src/${EXAMPLE_NAME}.cpp)
+  target_link_libraries(${EXAMPLE_NAME} ${LIBRARIES})
+  install(TARGETS ${EXAMPLE_NAME} RUNTIME DESTINATION . CONFIGURATIONS Release)  
+endfunction(add_example)
 
-install(FILES ${glew_LIBRARIES}       DESTINATION ${CMAKE_BINARY_DIR}/bin)
-install(FILES ${freeglut_LIBRARIES}   DESTINATION ${CMAKE_BINARY_DIR}/bin)
-install(FILES ${freeimage_LIBRARIES}  DESTINATION ${CMAKE_BINARY_DIR}/bin)
+add_example(sierpinski)
+add_example(picksquare)
+add_example(transform)
+add_example(sphere)
+add_example(curves)
+add_example(nurbscurve)
+add_example(surface)
+add_example(gravity)
+add_example(gravity2)
+add_example(mandelsimp)
+
+if(FREEIMAGE_FOUND)
+  include_directories(${FREEIMAGE_INCLUDE_DIR})
+  add_example(texture2d ${FREEIMAGE_LIBRARIES})
+  add_dependencies(texture2d copy_data)
+  add_example(mirror ${FREEIMAGE_LIBRARIES})
+  add_dependencies(mirror copy_data)
+  add_example(planet ${FREEIMAGE_LIBRARIES})
+  add_dependencies(planet copy_data)
+endif(FREEIMAGE_FOUND)
+
+if(MITK_FOUND)
+  include_directories(${MITK_INCLUDE_DIR})
+  add_example(spheremap ${MITK_LIBRARIES})
+  add_dependencies(spheremap copy_data)
+  add_example(dyncubemap ${MITK_LIBRARIES})
+  add_dependencies(dyncubemap copy_data)
+endif(MITK_FOUND)
+
+if(GLEW_FOUND)
+  include_directories(${GLEW_INCLUDE_DIR})
+  configure_file(src/shaders/phong.vert ${cg_examples_BINARY_DIR}/shaders/phong.vert COPYONLY)
+  configure_file(src/shaders/phong.frag ${cg_examples_BINARY_DIR}/shaders/phong.frag COPYONLY)
+  add_example(phongshader ${GLEW_GLEW_LIBRARY})
+endif(GLEW_FOUND)
