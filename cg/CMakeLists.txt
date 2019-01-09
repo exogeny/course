@@ -82,7 +82,7 @@ else()
   install(FILES ${freeimage_LIBRARIES} DESTINATION . CONFIGURATIONS Release)
 endif()
 find_package(MITK      QUIET)
-install(FILES ${MITK_mitk_LIBRARY} DESTINATION . CONFIGURATIONS Release)
+install(FILES ${MITK_DLL_LIBRARIES} DESTINATION . CONFIGURATIONS Release)
 
 include_directories(
   "include"

@@ -5,16 +5,12 @@
 #  MITK_FOUND, if false, do not try to use MITK.
 
 if(WIN32)
-  set(arch "32")
-  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(arch "64")
-  endif()
-
-  set(MITK_DIR         ${cg_examples_SOURCE_DIR}/mitk/win${arch})
+  set(MITK_DIR         ${cg_examples_SOURCE_DIR}/mitk/win${BUILD_ARCH})
   set(MITK_INCLUDE_DIR ${MITK_DIR}/Include)
   set(MITK_LIBRARY_DIR ${MITK_DIR}/Lib)
   if(WIN32)
     FIND_LIBRARY(MITK_mitk_LIBRARY NAMES mitkCommon PATHS ${MITK_LIBRARY_DIR})
+    set(MITK_DLL_LIBRARIES ${MITK_LIBRARY_DIR}/mitkCommon.dll)
   else(WIN32)
     message("Not support the mitk on this platform.")
   endif(WIN32)
