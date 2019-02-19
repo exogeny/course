@@ -1,6 +1,6 @@
 include(ExternalProject)
 
-set(glew_URL          https://jaist.dl.sourceforge.net/project/glew/glew/2.1.0/glew-2.1.0.zip)
+set(glew_URL          http://sourceforge.mirrorservice.org/g/gl/glew/glew/2.1.0/glew-2.1.0.zip)
 set(glew_BUILD        ${CMAKE_CURRENT_BINARY_DIR}/glew/src/glew)
 set(glew_INSTALL      ${CMAKE_CURRENT_BINARY_DIR}/glew/install)
 

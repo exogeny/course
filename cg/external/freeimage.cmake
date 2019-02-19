@@ -1,7 +1,7 @@
 include(ExternalProject)
 
 set(freeimage_DIR          ${CMAKE_CURRENT_BINARY_DIR}/freeimage/src/freeimage)
-set(freeimage_URL          https://jaist.dl.sourceforge.net/project/freeimage/Source%20Distribution/3.18.0/FreeImage3180.zip)
+set(freeimage_URL          http://sourceforge.mirrorservice.org/f/fr/freeimage/Source%20Distribution/3.18.0/FreeImage3180.zip)
 set(freeimage_BUILD        ${CMAKE_CURRENT_BINARY_DIR}/freeimage)
 
 
