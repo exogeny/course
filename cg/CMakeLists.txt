@@ -92,7 +92,12 @@ include_directories(
 add_custom_target(copy_data ${CMAKE_COMMAND} -E copy_directory ${homework_SOURCE_DIR}/data ${homework_BINARY_DIR}/data)
 
 install(DIRECTORY data/ DESTINATION data PATTERN ".svn" EXCLUDE)
-install(DIRECTORY src/shaders/ DESTINATION shaders PATTERN ".svn" EXCLUDE)
+set(COMMON_SRCS
+    src/common/camera.c
+    src/common/matrix.c
+    src/common/trackball.c
+    src/common/vector.c
+    src/common/shadow.c)
 
 function(add_homework HOMEWORK_INDEX ISCOPY_DATA)
   set(LIBRARIES ${freeglut_STATIC_LIBRARIES} ${OPENGL_LIBRARIES})
@@ -103,7 +108,7 @@ function(add_homework HOMEWORK_INDEX ISCOPY_DATA)
     list(APPEND LIBRARIES ${ADDITIONAL_LIBRARYS})
   endif(ARGV2)
   set(TARGET_NAME "homework${HOMEWORK_INDEX}")
-  add_executable(${TARGET_NAME} src/homework${HOMEWORK_INDEX}/main.cc)
+  add_executable(${TARGET_NAME} src/homework${HOMEWORK_INDEX}/main.c ${COMMON_SRCS})
   if("${EXTERNAL_DEPENDICES}" STREQUAL "")
   else()
     add_dependencies(${TARGET_NAME} ${EXTERNAL_DEPENDICES})
@@ -117,3 +122,4 @@ endfunction(add_homework)
 
 include_directories(${freeimage_INCLUDE_DIR})
 add_homework(1 true ${freeimage_STATIC_LIBRARIES})
+add_homework(3 false ${freeimage_STATIC_LIBRARIES})

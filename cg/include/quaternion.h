@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define __quaternion_h
 
 #include <assert.h>
-#include "matrix.h"
+#include "matrix.hpp"
 
 template <typename T> class Quaternion
 {

@@ -5,7 +5,7 @@
 #  MITK_FOUND, if false, do not try to use MITK.
 
 if(WIN32)
-  set(MITK_DIR         ${cg_examples_SOURCE_DIR}/mitk/win${BUILD_ARCH})
+  set(MITK_DIR         ${homework_SOURCE_DIR}/mitk/win${BUILD_ARCH})
   set(MITK_INCLUDE_DIR ${MITK_DIR}/Include)
   set(MITK_LIBRARY_DIR ${MITK_DIR}/Lib)
   if(WIN32)

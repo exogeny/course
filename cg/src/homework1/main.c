@@ -1,5 +1,4 @@
-#include <cstdio>
-#include <iostream>
+#include <stdio.h>
 #include "glinc.h"
 #include "FreeImage.h"
 
@@ -20,11 +19,11 @@
 #define MENU_SAVE   0x14
 #define MENU_QUIT   0x15
 
-int const MAX_STEPS    = 5;
-int const MAX_TEXTURES = 3;
+#define MAX_STEPS     5
+#define MAX_TEXTURES  3
 
-float const SPEED_STEP = 0.05f;
-float const Z_STEP = 0.05f;
+#define SPEED_STEP    0.05f
+#define Z_STEP        0.05f
 
 void * g_font = GLUT_BITMAP_8_BY_13;
 
@@ -52,7 +51,7 @@ float g_material_emission[] = { 0.0f,  0.0f,  0.0f, 0.0f};
 float g_material_specular_power = 100.0f;
 
 float g_color_background[] = {0.0f, 0.0f, 0.0f, 1.0f};
-float g_color_foreground[] = {1.0f - g_color_background[0], 1.0f - g_color_background[1], 1.0f - g_color_background[2], 1.0f};
+float g_color_foreground[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
 float g_cube_v[][3] = {
     {-1.0f, -1.0f,  1.0f},
@@ -66,13 +65,13 @@ float g_cube_v[][3] = {
 
 unsigned int g_filter = 2; // Which Filter To Use
 unsigned int g_step = 5;
-bool g_light = true; // Lighting ON/OFF
-bool g_lp = false;   // L Pressed?
-bool g_fp = false;   // F Pressed?
-bool g_fullscreen = false;
+int g_light = TRUE; // Lighting ON/OFF
+int g_lp = FALSE;   // L Pressed?
+int g_fp = FALSE;   // F Pressed?
+int g_fullscreen = FALSE;
 
-bool g_mouse_left  = false;
-bool g_mouse_right = false;
+int g_mouse_left  = FALSE;
+int g_mouse_right = FALSE;
 float g_mouse_x = 0.0f;
 float g_mouse_y = 0.0f;
 
@@ -88,16 +87,16 @@ inline void setPixelTransfer(float scale, float bias)
     glPixelTransferf(GL_BLUE_BIAS, bias);
 }
 
-bool saveFrameBuffer(char const *filename)
+int saveFrameBuffer(char const *filename)
 {
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
 
-    FIBITMAP *dib = FreeImage_Allocate(viewport[2], viewport[3], 24);
+    FIBITMAP *dib = FreeImage_Allocate(viewport[2], viewport[3], 24, 0, 0, 0);
     if (!dib)
-        return false;
+        return FALSE;
 
-    bool status(false);
+    int status = FALSE;
     BYTE *bits = FreeImage_GetBits(dib);
     if (bits)
     {
@@ -105,8 +104,8 @@ bool saveFrameBuffer(char const *filename)
         setPixelTransfer(1.0f, 0.0f);
         glReadPixels(viewport[0], viewport[1], viewport[2], viewport[3], GL_BGR, GL_UNSIGNED_BYTE, bits);
 
-        if (FreeImage_Save(FIF_PNG, dib, filename))
-            status = true;
+        if (FreeImage_Save(FIF_PNG, dib, filename, 0))
+            status = TRUE;
     }
 
     FreeImage_Unload(dib);
@@ -123,25 +122,25 @@ void setMaterial()
     glMaterialf(face, GL_SHININESS, g_material_specular_power);
 }
 
-FIBITMAP *loadImage(char const *filename, int flag = 0)
+FIBITMAP *loadImage(char const *filename, int flag)
 {
     FREE_IMAGE_FORMAT fif = FreeImage_GetFileType(filename, 0);
 
     if (fif == FIF_UNKNOWN)
         fif = FreeImage_GetFIFFromFilename(filename);
     if (fif == FIF_UNKNOWN)
-        return false;
+        return FALSE;
 
     return FreeImage_Load(fif, filename, flag);
 }
 
-bool loadTexture()
+int loadTexture()
 {
-    FIBITMAP *tdib = loadImage("data/homework1/Crate.png");
+    FIBITMAP *tdib = loadImage("data/homework1/Crate.png", 0);
     if (!tdib)
-        return false;
+        return FALSE;
 
-    bool status(false);
+    int status = FALSE;
     unsigned int bpp = FreeImage_GetBPP(tdib);
 
     FIBITMAP *dib = tdib;
@@ -158,7 +157,7 @@ bool loadTexture()
 
     if (bits != 0 && width > 0 && height > 0)
     {
-        status = true; // Set The Status To TRUE
+        status = TRUE; // Set The Status To TRUE
 
         glGenTextures(3, g_texture_id); // Create Three Textures
 
@@ -385,10 +384,10 @@ void initLists()
     initFullList();
 }
 
-bool init()
+int init()
 {
     if (!loadTexture())
-        return false;
+        return FALSE;
 
     glEnable(GL_TEXTURE_2D);                                    // Enable Texture Mapping
     glShadeModel(GL_SMOOTH);                                    // Enable Smooth Shading
@@ -416,7 +415,7 @@ bool init()
 
     initLists();
     setMaterial();
-    return true; // Initialization Went OK
+    return TRUE; // Initialization Went OK
 }
 
 void reshapeCallback(int width, int height)
@@ -559,12 +558,12 @@ void keyboardCallback(unsigned char key, int x, int y)
         break;
 
     case 'f':
-        g_fp = true;
+        g_fp = TRUE;
         g_filter = (g_filter + 1) % MAX_TEXTURES;
         break;
 
     case 'l':
-        g_lp = true;
+        g_lp = TRUE;
         g_light = !g_light;
         break;
 
@@ -580,7 +579,7 @@ void keyboardCallback(unsigned char key, int x, int y)
         g_yrot = 30.0f;
         g_xspeed = 0.0f;
         g_yspeed = 0.0f;
-        g_light = false;
+        g_light = FALSE;
         break;
 
     case 'o':
@@ -656,12 +655,12 @@ void mainMenuFunc(int mid)
     switch (mid)
     {
     case MENU_FILTER:
-        g_fp = true;
+        g_fp = TRUE;
         g_filter = (g_filter + 1) % MAX_TEXTURES;
         break;
 
     case MENU_LIGHT:
-        g_lp = true;
+        g_lp = TRUE;
         g_light = !g_light;
         break;
 
@@ -727,11 +726,11 @@ void mouseCallback(int button, int state, int x, int y)
         {
             if(state == GLUT_DOWN)
             {
-                g_mouse_left = true;
+                g_mouse_left = TRUE;
             }
             else if(state == GLUT_UP)
             {
-                g_mouse_left = false;
+                g_mouse_left = FALSE;
             }
         }
     }
