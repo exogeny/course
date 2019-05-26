@@ -44,6 +44,7 @@ main(void)
 1. 使用`gcc homework1.c -fopenmp`进行编译，得到`a.out`执行文件。
 
 1. 运行`./a.out`，得到输出结果：
+
     ![hello](dist/hello.png)
 
 1. 由于硬件为双核双线程，因此得到了两行输出，结果符合预期。
