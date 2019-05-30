@@ -3,3 +3,10 @@
 build/*
 *.out
 .vscode
+
+# for jupyter
+.ipynb_checkpoints
+
+# for python
+__pycache__/**
+*.pyc
