@@ -4,7 +4,10 @@
 // function to add the elements of two arrays
 __global__ void add(int n, float *x, float *y)
 {
-  for (int i = 0; i < n; i++)
+  printf("block: %d, thread: %d\n", blockIdx.x, threadIdx.x);
+  int index = blockIdx.x * blockDim.x + threadIdx.x;
+  int stride = gridDim.x * blockDim.x;
+  for (int i = index; i < n; i += stride)
     y[i] = x[i] + y[i];
 }
 
@@ -24,8 +27,10 @@ int main(void)
     y[i] = 2.0f;
   }
 
+  int block_size = 256;
+  int num_blocks = (N + block_size - 1) / block_size;
   // Run kernel on 1M elements on the CPU
-  add<<<1, 1>>>(N, x, y);
+  add<<<num_blocks, block_size>>>(N, x, y);
 
   cudaDeviceSynchronize();
 
