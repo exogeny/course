@@ -11,3 +11,4 @@
 1. [图形学与可视化](https://github.com/TerenceWangh/course/tree/master/cg)
 1. [并行计算](https://github.com/TerenceWangh/course/tree/master/parallel)
 1. [计算机视觉：算法与应用](https://github.com/TerenceWangh/course/tree/master/vision)
+1. [最优化算法理论与应用](https://github.com/TerenceWangh/course/tree/master/opt)

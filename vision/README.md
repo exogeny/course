@@ -4,5 +4,5 @@
 作业
 ---
 
-1. [CS231n Assgnment1](assgnment1/answer.md)
+1. [CS231n Assignment1](assignment/answer.md)
 
